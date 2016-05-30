@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>reTHINK Project</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="css/uploadfile.css" rel="stylesheet">
+    <link rel="stylesheet" href="jquery-ui-1.11.4.custom/jquery-ui.min.css">
+</head>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!-- For Upload file -->
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js">
+</script>
+<!-- For Pop up window-->
+<script src="jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+<script src="jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="./guid.bundle.js"></script>
+<script type="text/javascript">
+    var runtime = window.runtime.runtime;
+    var obj = []; //Empty JSON Object
+
+    //Call function to be called on click event of call button
+    function call(j) {
+        alert("Calling " + obj[j].mnum);
+    }
+    //Message function to be called on click event of message button
+    function message(j) {
+        alert("Message sent to " + obj[j].mnum)
+    }
+    //removing a friend
+    function deleteRecordByFileName(myArr, fname) {
+        var index = null;
+        console.log("before length is " + myArr.length)
+        for (var i = 0; i < myArr.length; i++) {
+            if (myArr[i].fname === fname) {
+                index = i;
+                break;
+            }
+        }
+        if (index !== null) {
+            myArr.splice(index, 1);
+        }
+        console.log("length is " + myArr.length)
+        return myArr;
+    }
+    //Uploading JSON
+    $(document).on('change', '.filestyle', function(event) {
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            obj = JSON.parse(event.target.result);
+            //alert(Obj[0].fname);
+            console.log("uploaded file");
+            createFriendList(obj);
+            export_list(obj);
+
+        }
+        reader.readAsText(event.target.files[0]);
+        $("#right-div").html("<h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>");
+    });
+
+    //remove friend
+    function removeFriend(j) {
+        if (confirm('Are you sure you want to delete this friend from your friend list?')) {
+            window.runtime.runtime.removeContact(obj[j].guid);
+            obj = deleteRecordByFileName(obj, obj[j].fname);
+            createFriendList(obj);
+            details(0);
+            export_list(obj);
+        } else {
+            // Do nothing!
+        }
+    }
+
+    function sortFriends(obj) {
+        obj.sort(function(a, b) {
+
+            if (a.fname.toLowerCase() < b.fname.toLowerCase())
+                return -1;
+
+            if (a.fname.toLowerCase() > b.fname.toLowerCase())
+                return 1;
+            return 0;
+
+        });
+    }
+    //create friendlist
+    function createFriendList(obj) {
+        sortFriends(obj);
+        if (obj.length !== 0) {
+            var table = '<table class="table table-hover" id="mytable">';
+            var i = 0;
+            $.each(obj, function() {
+                table += '<tr><td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="button" aria-pressed="false" autocomplete="off" id="button' + i + '" onclick=details(' + i + ')><b>' + this['fname'] + '\t' + this['lname'] + '</b></button></td></tr>';
+                i++;
+            });
+            table += '</table>';
+            $("#left-div").html(table);
+        } else {
+            $("#left-div").html("<h1> No friends, Please import your contacts </h1>");
+            alert("No friends, Please import your contacts");
+        }
+    }
+
+    //Function to write details on click of a friend's name
+    function details(j) {
+        if (obj.length !== 0) {
+            console.log("helloValue from obj " + obj[j].fname);
+            $("#right-div").html(
+                "<table class='table table-hover'><tr><td><b>First Name</b></td><td>" + obj[j].fname + "</td><td><button class='btn btn-info' onclick=edit_values(1," + j + ")>Edit</button></td>" +
+                "<tr><td><b>Last Name </b></td><td>" + obj[j].lname + "</td><td><button class='btn btn-info' onclick=edit_values(2," + j + ")>Edit</button></td></tr>" +
+                "<tr><td><b>GUID </b></td><td>" + obj[j].GUID + "</td><td><button class='btn btn-info' onclick=edit_values(3," + j + ")>Edit</button></td></tr>" +
+                "<tr><td colspan=3 align='middle'><button class='btn btn-success' onclick=call(" + j + ")>Call</button></td></tr>" +
+                "<tr><td colspan=3 align='middle'><button class='btn btn-warning' onclick=call(" + j + ")>Text</button class='btn btn-danger'></td></tr>" +
+                "<tr><td colspan=3 align='middle'><button class='btn btn-danger' onclick = removeFriend(" + j + ")>Remove this friend</button></td></tr>" +
+                "</table>");
+        } else {
+            $("#right-div").html("<h1> No Records left </h1>");
+        }
+    }
+
+    //Generating list of friends dynamically
+    $(document).ready(function() {
+        $('#left-div').html("<h3 align='center'> <b>Please import your contacts using import button</b> </h3>")
+    });
+
+    //Adding a new user
+    function export_list(obj) {
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+        var a = document.createElement('a');
+        a.href = 'data:' + data;
+        a.download = 'contacts.json';
+        a.innerHTML = '<span class="glyphicon glyphicon-export"><b><u>Export Contacts</u></b><span>';
+        a.class = 'btn btn-primary';
+        $("#export_div").html(a);
+    }
+
+    //funtion for dialogue box to add new friend with validation
+    $(function() {
+        var dialog, form;
+        var fname = $("#fname");
+        var lname = $("#lname");
+        var mnum = $("#mnum");
+        var age = $("#age");
+        var guid = $("#guid");
+        allFields = $([]).add(fname).add(lname).add(age).add(guid).add(mnum),
+            tips = $(".validateTips");
+
+        function updateTips(t) {
+            tips
+                .text(t)
+                .addClass("ui-state-highlight");
+            setTimeout(function() {
+                tips.removeClass("ui-state-highlight", 1500);
+            }, 500);
+        }
+
+        function checkLength(o, n, min, max) {
+            if (o.val().length > max || o.val().length < min) {
+                o.addClass("ui-state-error");
+                updateTips("Length of " + n + " must be between " +
+                    min + " and " + max + ".");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function checkRegexp(o, regexp, n) {
+            if (!(regexp.test(o.val()))) {
+                o.addClass("ui-state-error");
+                updateTips(n);
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function addUser() {
+            var valid = true;
+            allFields.removeClass("ui-state-error");
+            valid = valid && checkLength(fname, "firstname", 1, 20);
+            valid = valid && checkLength(lname, "lastlname", 1, 20);
+            valid = valid && checkLength(guid, "guid", 8, 32);
+            valid = valid && checkLength(age, "age", 1, 2);
+            valid = valid && checkRegexp(fname, /^[a-zA-Z]*$/, "firstname can consist of a-z only");
+            valid = valid && checkRegexp(lname, /^[a-zA-Z]*$/, "lastname can consist of a-z only");
+            valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
+            valid = valid && checkRegexp(age, /^\d+$/, "age can only be a two digit number");
+            //valid = valid && checkRegexp( mnum, /^[0-9]\d{10}$/, "Mobile Number can only be 10 digits long" );
+            if (valid) {
+                obj.push({
+                    "fname": fname.val(),
+                    "lname": lname.val(),
+                    "age": age.val(),
+                    "GUID": guid.val(),
+                    "mnum": mnum.val()
+                });
+                window.runtime.runtime.addContact(guid.val(), fname.val().toLowerCase(), lname.val().toLowerCase());
+                dialog.dialog("close");
+                createFriendList(obj);
+                export_list(obj);
+            }
+            return valid;
+        };
+
+        dialog = $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Create an account": addUser,
+                Cancel: function() {
+                    dialog.dialog("close");
+                }
+            },
+            close: function() {
+                form[0].reset();
+                allFields.removeClass("ui-state-error");
+            }
+        });
+
+        form = dialog.find("form").on("submit", function(event) {
+            event.preventDefault();
+            addUser();
+
+        });
+
+        $("#add_new_btn").button().on("click", function() {
+            dialog.dialog("open");
+        });
+    });
+    //edit friend's detail
+    function edit_values(l, j) {
+        $('tr:nth-child(' + l + ') td:nth-child(2)').each(function() {
+            console.log("Editing the value ");
+            var html = $(this).html();
+            if (l == 1) {
+                var input = $('<input id="efname" type="text" />');
+            } else if (l == 2) {
+                var input = $('<input id="elname" type="text" />');
+            } else {
+                var input = $('<input id="eguid" type="text" />');
+            }
+            input.val(html);
+            $(this).html(input);
+            $('tr:nth-child(' + l + ') td:nth-child(3)').html("<button class='btn btn-info' onclick=edit_friend(" + l + "," + j + ")>Done</button>");
+        });
+    }
+    //validations
+    function checkLength(o, n, min, max) {
+        if (o.val().length > max || o.val().length < min) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function checkRegexp(o, regexp, n) {
+        if (!(regexp.test(o.val()))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    //commiting the changes
+    function edit_friend(l, j) {
+        var error_status = false;
+        if (l == 1 && checkLength($("#efname"), "firstname", 1, 20) && checkRegexp($("#efname"), /^[a-zA-Z]*$/, "firstname can consist of a-z only")) {
+            obj[j].fname = $("#efname").val();
+            error_status = true;
+        }
+        if (l == 2 && checkLength($("#elname"), "Lastname", 1, 20) && checkRegexp($("#elname"), /^[a-zA-Z]*$/, "Lastname can consist of a-z only")) {
+            obj[j].lname = $("#elname").val();
+            error_status = true;
+        }
+        if (l == 3 && checkRegexp($("#eguid"), /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters") && checkLength($("#eguid"), "guid", 8, 32)) {
+            obj[j].GUID = $("#eguid").val();
+            error_status = true;
+        }
+        if (error_status) {
+            details(j);
+            createFriendList(obj);
+            export_list(obj);
+        } else {
+            alert("Please enter valid details");
+        }
+    }
+
+    function search_friend() {
+        var tempObj = [];
+        var name = $("#searchBox").val();
+        if (name == "") {
+            createFriendList(obj);
+        } else {
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].fname.toLowerCase() == name.toLowerCase() || obj[i].lname.toLowerCase() == name.toLowerCase()) {
+                    console.log("found a contact" + obj[i].fname);
+                    tempObj.push(obj[i]);
+                }
+            };
+            if (tempObj.length == 0) {
+                $('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
+            } else {
+                createFriendList(tempObj);
+                window.runtime.runtime.getContact(name.toLowerCase());
+            }
+        }
+    }
+</script>
+
+<body>
+    <!-- Pop up Input Form -->
+    <div id="dialog-form" title="Create new user">
+        <p class="validateTips">All form fields are required.</p>
+        <form id="dform" class="addform">
+            <fieldset>
+                <label>First Name</label>
+                <input name="fname" type="text" id="fname" class="text ui-widget-content ui-corner-all" />
+                <label>Last Name</label>
+                <input name="lname" type="text" id="lname" class="text ui-widget-content ui-corner-all" /><br>
+                <label>Age</label>
+                <input name="age" type="text" id="age" class="text ui-widget-content ui-corner-all" /><br>
+                <label for="mnum">Mobile Number</label>
+                <input name="mnum" type="text" id="mnum" class="text ui-widget-content ui-corner-all" /><br>
+                <label for="guid">GUID</label>
+                <input name="guid" type="text" id="guid" class="text ui-widget-content ui-corner-all" />
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+    <!--CONTAINER-->
+    <div id="container">
+        <!--HEADER-->
+        <div id="header">
+            <div id="logo"><img src="images/logo.jpg" alt="reTHINK logo" height="50" width="300"></div>
+        </div>
+        <!--CONTENT AREA-->
+        <div id='body'>
+            <div id="div1">
+                <div id="content_area" class="col-sm-12">
+                    <p style="text-align:center;">
+                        <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF; ">AddressBook</span>
+                    </p>
+                </div>
+                <br>
+            </div>
+            <div class="row" id="exp_imp" style="border-bottom: 2px solid maroon;">
+                <div id="import_div" class="col-sm-3"><input type="file" class="filestyle" data-input="false" text="Import" style="border: 4px solid black;height: 2px;"></div>
+
+                <div id="blank_div" class="col-sm-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" style="height:30px; padding-bottom: 5px;" placeholder="Search a friend..." id="searchBox">
+                        <span class="input-group-btn">
+                      <button class="btn btn-primary" style="height:30px;" type="button" id="searchBtn" onclick="search_friend()" >Go!</button>
+                    </span>
+                    </div>
+                </div>
+                <div id="export_div" class="col-sm-3" align="right"></div>
+                <div id="add_new_div" class="col-sm-3" align="right"><button style="height:35px;" class="btn btn-primary" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button></div>
+            </div>
+            <div class="row" id="heading">
+                <div class="col-sm-6">
+                    <p style="text-align:center;">
+                        <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Friend List</u></span>
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <p style="text-align:center;">
+                        <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Your Friend's Details</u></span>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="div2">
+                <div id="left-div" class="col-sm-6" style="overflow: auto; height: 350px; border: 4px solid maroon">
+                    <h4 align='center' style='border: 1px solid #333; background: grey'><b>Friend List</b></h4>
+                </div>
+                <div id="right-div" class="col-sm-6" style="overflow: auto; height: 350px;border: 4px solid maroon">
+                    <h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>
+                </div>
+            </div>
+        </div>
+        <!--FOOTER-->
+        <div id='footer' class='footer'></div>
+    </div>
+</body>
+
+</html>

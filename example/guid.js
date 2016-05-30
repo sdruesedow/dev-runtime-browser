@@ -55,8 +55,10 @@ function printContact(event){
     $('.testResult').append("<h3>The user's firstName is <u>"+ userFirstName+"<h3></u> and Last Name is <u>"+ userLastName+"</u></h3>");
   }
 }
+
 function runtimeInstalled(runtime) {
   console.log(runtime);
+  window.runtime = {"runtime": runtime};
   $('.getDet').on('click', (e)=>{
     runtime.generateGUID();
     runtime.addUserID('facebook.com/felix');
