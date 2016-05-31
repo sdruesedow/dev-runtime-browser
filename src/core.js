@@ -42,7 +42,7 @@ function searchHyperty(runtime, descriptor){
 
 let parameters = new URI(window.location).search(true)
 let runtimeURL = parameters.runtime
-let development = !!parameters.development
+let development = parameters.development === "true"
 let catalogue = RuntimeFactory.createRuntimeCatalogue(development)
 
 catalogue.getRuntimeDescriptor(runtimeURL)
