@@ -23,6 +23,10 @@
 import URI from 'urijs';
 import RuntimeFactory from './RuntimeFactory';
 
+if(parent.cordova){
+    window.cordova = true
+    window.open = function(url){ return parent.cordova.InAppBrowser.open(url, '_blank', 'location=no,toolbar=no')};
+}
 function returnHyperty(source, hyperty){
     source.postMessage({to: 'runtime:loadedHyperty', body: hyperty}, '*')
 }
