@@ -21,16 +21,14 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <!-- For Upload file -->
-<script type="text/javascript" src="js/bootstrap-filestyle.min.js">
-</script>
+<script type="text/javascript" src="js/bootstrap-filestyle.min.js"></script>
 <!-- For Pop up window-->
 <script src="jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
 <script src="jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script src="./guid.bundle.js"></script>
 <script type="text/javascript">
-    var runtime = window.runtime.runtime;
-    var obj = []; //Empty JSON Object
+    var obj = []; //Empty JSON Object to store the friendlist temporarily 
 
     //Call function to be called on click event of call button
     function call(j) {
@@ -56,21 +54,6 @@
         console.log("length is " + myArr.length)
         return myArr;
     }
-    //Uploading JSON
-    $(document).on('change', '.filestyle', function(event) {
-        var reader = new FileReader();
-
-        reader.onload = function(event) {
-            obj = JSON.parse(event.target.result);
-            //alert(Obj[0].fname);
-            console.log("uploaded file");
-            createFriendList(obj);
-            export_list(obj);
-
-        }
-        reader.readAsText(event.target.files[0]);
-        $("#right-div").html("<h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>");
-    });
 
     //remove friend
     function removeFriend(j) {
@@ -132,6 +115,147 @@
         }
     }
 
+    //Adding a new user
+    function export_list(obj) {
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+        var a = document.createElement('a');
+        a.href = 'data:' + data;
+        a.download = 'contacts.json';
+        a.innerHTML = '<span class="glyphicon glyphicon-download-alt"><b><u>Download your Contacts</b></u><span>';
+        a.class = 'btn btn-primary';
+        $("#export_link").html(a);
+    }
+
+    function useGUID() {
+
+        var seed = $("#seed").val();
+        if (seed == "" || seed == null) {
+            alert("please enter seed");
+        } else {
+            console.log("seed is" + seed);
+            window.runtime.runtime.useGUID(seed);
+        }
+
+    }
+
+    //edit friend's detail
+    function edit_values(l, j) {
+        $('tr:nth-child(' + l + ') td:nth-child(2)').each(function() {
+            console.log("Editing the value ");
+            var html = $(this).html();
+            if (l == 1) {
+                var input = $('<input id="efname" type="text" />');
+            } else if (l == 2) {
+                var input = $('<input id="elname" type="text" />');
+            } else {
+                var input = $('<input id="eguid" type="text" />');
+            }
+            input.val(html);
+            $(this).html(input);
+            $('tr:nth-child(' + l + ') td:nth-child(3)').html("<button class='btn btn-info' onclick=edit_friend(" + l + "," + j + ")>Done</button>");
+        });
+    }
+
+    //validations
+    function checkLength(o, n, min, max) {
+        if (o.val().length > max || o.val().length < min) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function checkRegexp(o, regexp, n) {
+        if (!(regexp.test(o.val()))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    //commiting the changes
+    function edit_friend(l, j) {
+        var error_status = false;
+        if (l == 1 && checkLength($("#efname"), "firstname", 1, 20) && checkRegexp($("#efname"), /^[a-zA-Z]*$/, "firstname can consist of a-z only")) {
+            obj[j].fname = $("#efname").val();
+            error_status = true;
+        }
+        if (l == 2 && checkLength($("#elname"), "Lastname", 1, 20) && checkRegexp($("#elname"), /^[a-zA-Z]*$/, "Lastname can consist of a-z only")) {
+            obj[j].lname = $("#elname").val();
+            error_status = true;
+        }
+        if (l == 3 && checkRegexp($("#eguid"), /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters") && checkLength($("#eguid"), "guid", 8, 32)) {
+            obj[j].GUID = $("#eguid").val();
+            error_status = true;
+        }
+        if (error_status) {
+            details(j);
+            createFriendList(obj);
+            export_list(obj);
+        } else {
+            alert("Please enter valid details");
+        }
+    }
+
+    function search_friend() {
+        var name = $("#searchBox").val();
+        window.runtime.runtime.getContact(name.toLowerCase());
+        window.addEventListener("message", getContact, false);
+    }
+
+
+    function getContact(event) {
+        var name = $("#searchBox").val();
+        if (event.data.to == "runtime:getContact") {
+            var tempObj = [];
+            var userFirstName = event.data.body.firstName;
+            var userLastName = event.data.body.lastName;
+            var userExist = event.data.body.userExist;
+            if (name == "") {
+                createFriendList(obj);
+            } else {
+                for (var i = 0; i < obj.length; i++) {
+                    if ((obj[i].fname.toLowerCase() == name.toLowerCase() || obj[i].lname.toLowerCase() == name.toLowerCase()) && (userFirstName.toLowerCase() == name.toLowerCase() || userLastName.toLowerCase() == name.toLowerCase()) && userExist) {
+                        console.log("found a contact" + userFirstName);
+                        tempObj.push(obj[i]);
+                    }
+                };
+                if (tempObj.length == 0) {
+                    $('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
+                } else {
+                    createFriendList(tempObj);
+                }
+            }
+        }
+    }
+
+    function add_user_id() {
+        var userid = prompt("Please enter user ID you would like to add ", "");
+        if (userid != "" && userid != null) {
+            window.runtime.runtime.addUserID("userid");
+            //alert("User Id "+userid+" is added succussfully");
+        } else {
+            alert("user ID cannot be blank");
+        }
+    }
+
+    function remove_user_id() {
+        var userid = prompt("Please enter user ID you would like to remove ", "");
+        if (userid != "" && userid != null) {
+            window.runtime.runtime.removeUserID("userid");
+            //alert("User Id "+userid+" is deleted succussfully");
+        } else {
+            alert("user ID cannot be blank");
+        }
+    }
+
+    function query_global_registry() {
+        window.runtime.runtime.queryGlobalRegistry('shdfjdskfjs7fdsd87few87fs898sa');
+    }
+
+    function generate_guid() {
+        var guid = window.runtime.runtime.generateGUID();
+        $("#message_lbl").html('<span class="label label-success"> *GUID is ' + guid + '</span>');
+    }
     //Generating list of friends dynamically
     $(document).ready(function() {
         $('#left-div').html("<h3 align='center'> <b>Please import your contacts using import button</b> </h3>")
@@ -159,30 +283,6 @@
             '</div>' +
             '</div>');
     });
-
-    //Adding a new user
-    function export_list(obj) {
-        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
-        var a = document.createElement('a');
-        a.href = 'data:' + data;
-        a.download = 'contacts.json';
-        a.innerHTML = '<span class="glyphicon glyphicon-download-alt"><b><u>Download your Contacts</b></u><span>';
-        a.class = 'btn btn-primary';
-        $("#export_link").html(a);
-    }
-
-    function useGUID() {
-
-        var seed = $("#seed").val();
-        if (seed == "" || seed == null) {
-            alert("please enter seed");
-        } else {
-            console.log("seed is" + seed);
-            window.runtime.runtime.useGUID(seed);
-        }
-
-    }
-
     //funtion for dialogue box to add new friend with validation
     $(function() {
         var dialog, form;
@@ -280,112 +380,22 @@
             dialog.dialog("open");
         });
     });
-    //edit friend's detail
-    function edit_values(l, j) {
-        $('tr:nth-child(' + l + ') td:nth-child(2)').each(function() {
-            console.log("Editing the value ");
-            var html = $(this).html();
-            if (l == 1) {
-                var input = $('<input id="efname" type="text" />');
-            } else if (l == 2) {
-                var input = $('<input id="elname" type="text" />');
-            } else {
-                var input = $('<input id="eguid" type="text" />');
-            }
-            input.val(html);
-            $(this).html(input);
-            $('tr:nth-child(' + l + ') td:nth-child(3)').html("<button class='btn btn-info' onclick=edit_friend(" + l + "," + j + ")>Done</button>");
-        });
-    }
-    //validations
-    function checkLength(o, n, min, max) {
-        if (o.val().length > max || o.val().length < min) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
-    function checkRegexp(o, regexp, n) {
-        if (!(regexp.test(o.val()))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    //commiting the changes
-    function edit_friend(l, j) {
-        var error_status = false;
-        if (l == 1 && checkLength($("#efname"), "firstname", 1, 20) && checkRegexp($("#efname"), /^[a-zA-Z]*$/, "firstname can consist of a-z only")) {
-            obj[j].fname = $("#efname").val();
-            error_status = true;
-        }
-        if (l == 2 && checkLength($("#elname"), "Lastname", 1, 20) && checkRegexp($("#elname"), /^[a-zA-Z]*$/, "Lastname can consist of a-z only")) {
-            obj[j].lname = $("#elname").val();
-            error_status = true;
-        }
-        if (l == 3 && checkRegexp($("#eguid"), /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters") && checkLength($("#eguid"), "guid", 8, 32)) {
-            obj[j].GUID = $("#eguid").val();
-            error_status = true;
-        }
-        if (error_status) {
-            details(j);
+    //Uploading JSON
+    $(document).on('change', '.filestyle', function(event) {
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            obj = JSON.parse(event.target.result);
+            //alert(Obj[0].fname);
+            console.log("uploaded file");
             createFriendList(obj);
             export_list(obj);
-        } else {
-            alert("Please enter valid details");
+
         }
-    }
-
-    function search_friend() {
-        var tempObj = [];
-        var name = $("#searchBox").val();
-        if (name == "") {
-            createFriendList(obj);
-        } else {
-            for (var i = 0; i < obj.length; i++) {
-                if (obj[i].fname.toLowerCase() == name.toLowerCase() || obj[i].lname.toLowerCase() == name.toLowerCase()) {
-                    console.log("found a contact" + obj[i].fname);
-                    tempObj.push(obj[i]);
-                }
-            };
-            if (tempObj.length == 0) {
-                $('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
-            } else {
-                createFriendList(tempObj);
-                window.runtime.runtime.getContact(name.toLowerCase());
-            }
-        }
-    }
-
-    function add_user_id() {
-        var userid = prompt("Please enter user ID you would like to add ", "");
-        if (userid != "" && userid != null) {
-            window.runtime.runtime.addUserID("userid");
-            //alert("User Id "+userid+" is added succussfully");
-        } else {
-            alert("user ID cannot be blank");
-        }
-    }
-
-    function remove_user_id() {
-        var userid = prompt("Please enter user ID you would like to remove ", "");
-        if (userid != "" && userid != null) {
-            window.runtime.runtime.removeUserID("userid");
-            //alert("User Id "+userid+" is deleted succussfully");
-        } else {
-            alert("user ID cannot be blank");
-        }
-    }
-
-    function query_global_registry() {
-        window.runtime.runtime.queryGlobalRegistry('shdfjdskfjs7fdsd87few87fs898sa');
-    }
-
-    function generate_guid() {
-        var guid = window.runtime.runtime.generateGUID();
-        $("#message_lbl").html('<span class="label label-success"> *GUID is ' + guid + '</span>');
-    }
+        reader.readAsText(event.target.files[0]);
+        $("#right-div").html("<h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>");
+    });
 </script>
 
 <body>

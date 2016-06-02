@@ -98,10 +98,15 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let username = event.data.body.username;
                 console.log("##Inside core: finding user with username: " + username);
                 let user = runtime.graphConnector.getContact(username)[0];
-                console.log("##User Found: \n Firtsname: " + user.firstName +
-                    "\n LastName " + user.lastName +
-                    "\n GUID: " + user.guid);
-                parent.postMessage({to:'runtime:getContact', body:{"firstName" : user.firstName, "lastName" : user.lastName}}, '*');
+                if(user!=null){
+                    console.log("##User Found: \n Firtsname: " + user.firstName +
+                        "\n LastName " + user.lastName +
+                        "\n GUID: " + user.guid);
+                    parent.postMessage({to:'runtime:getContact', body:{"firstName" : user.firstName, "lastName" : user.lastName, "userExist" : true, "users": user}}, '*');
+                } else {
+                    console.log("Please enter the name");
+                    parent.postMessage({to:'runtime:getContact', body:{"firstName" : "", "lastName" : "", "userExist" : false, "users" : user}}, '*');
+                }
             } else if (event.data.to === 'graph:checkGUID') {
                 let guid = event.data.body.guid;
                 console.log("##Inside core: finding user with GUID: " + guid);
