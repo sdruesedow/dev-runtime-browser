@@ -399,8 +399,15 @@
             console.log("uploaded file");
             createFriendList(obj);
             export_list(obj);
+            for (var i = 0; i < obj.length; i++) {
+                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname.toLowerCase(), obj[i].lname.toLowerCase());
+            };
             if(obj.length!=0){
+                for (var i = 0; i < obj.length; i++) {
+                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname.toLowerCase(), obj[i].lname.toLowerCase());
+                };
                 details(0);
+                $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> * ' + obj.length+ ' contacts have been imported</span>');
             } else {
                 $("#right-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file\"</b></h4> ");
             }
