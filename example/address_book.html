@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>reTHINK Project</title>
@@ -15,7 +16,7 @@
 <script src="js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 <!-- Latest compiled and minified JavaScript -->
@@ -58,11 +59,13 @@
     //remove friend
     function removeFriend(j) {
         if (confirm('Are you sure you want to delete this friend from your friend list?')) {
+            var userdel = obj[j].fname;
             window.runtime.runtime.removeContact(obj[j].guid);
             obj = deleteRecordByFileName(obj, obj[j].fname);
             createFriendList(obj);
             details(0);
             export_list(obj);
+            $("#message_lbl").html('<h4 ><span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *Your friend \"' + userdel + '\" has been successfully removed </span></h4>');
         } else {
             // Do nothing!
         }
@@ -191,6 +194,7 @@
             details(j);
             createFriendList(obj);
             export_list(obj);
+            $("#message_lbl").html('<h4 ><span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *Details have been updated successfully</span></h4>');
         } else {
             alert("Please enter valid details");
         }
@@ -216,11 +220,13 @@
                 for (var i = 0; i < obj.length; i++) {
                     if ((obj[i].fname.toLowerCase() == name.toLowerCase() || obj[i].lname.toLowerCase() == name.toLowerCase()) && (userFirstName.toLowerCase() == name.toLowerCase() || userLastName.toLowerCase() == name.toLowerCase()) && userExist) {
                         console.log("found a contact" + userFirstName);
+                        $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *Found a contact with name \"' + name + '\"</span>');
                         tempObj.push(obj[i]);
                     }
                 };
                 if (tempObj.length == 0) {
                     $('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
+                    $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *No Such contact with name \"' + name + '\"</span>');
                 } else {
                     createFriendList(tempObj);
                 }
@@ -232,6 +238,7 @@
         var userid = prompt("Please enter user ID you would like to add ", "");
         if (userid != "" && userid != null) {
             window.runtime.runtime.addUserID("userid");
+            $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *User ID \"' + userid+ '\" is successfully Added</span>');
             //alert("User Id "+userid+" is added succussfully");
         } else {
             alert("user ID cannot be blank");
@@ -241,7 +248,8 @@
     function remove_user_id() {
         var userid = prompt("Please enter user ID you would like to remove ", "");
         if (userid != "" && userid != null) {
-            window.runtime.runtime.removeUserID("userid");
+            window.runtime.runtime.removeUserID(userid);
+            $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *User ID \"' + userid+ '\" is successfully deleted</span>');
             //alert("User Id "+userid+" is deleted succussfully");
         } else {
             alert("user ID cannot be blank");
@@ -254,14 +262,14 @@
 
     function generate_guid() {
         var guid = window.runtime.runtime.generateGUID();
-        $("#message_lbl").html('<span class="label label-success"> *GUID is ' + guid + '</span>');
+        $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *GUID is \"' + guid + '\"</span>');
     }
     //Generating list of friends dynamically
     $(document).ready(function() {
-        $('#left-div').html("<h3 align='center'> <b>Please import your contacts using import button</b> </h3>")
+     
         $('#login').html('<div class="container">' +
             '<!-- Trigger the modal with a button -->' +
-            '<button type="button" style="height:35px;" class="btn btn-primary" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"><b>  Login</b></span></button>' +
+            '' +
             '<!-- Modal -->' +
             '<div class="modal fade" id="myLogin" role="dialog">' +
             '<div class="modal-dialog">' +
@@ -345,7 +353,7 @@
                     "mnum": mnum.val()
                 });
                 window.runtime.runtime.addContact(guid.val(), fname.val().toLowerCase(), lname.val().toLowerCase());
-                $("#message_lbl").html('<span class="label label-success"> User ' + fname.val() + ' is added</span>');
+                $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *User ' + fname.val()+ ' is added</span>');
                 dialog.dialog("close");
                 createFriendList(obj);
                 export_list(obj);
@@ -425,7 +433,7 @@
         <div id="header">
             <div id="logo"><img src="images/logo.jpg" alt="reTHINK logo" height="50" width="300"></div>
 
-            <div id="login" align="right" style="padding-top: 30px; padding-left: 120px"></div>
+            
         </div>
         <!--CONTENT AREA-->
         <div id='body'>
@@ -435,66 +443,83 @@
                         <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF; ">AddressBook</span>
                     </p>
                 </div>
-                <br>
             </div>
+
+            <!-- All the links and search button-->
             <div class="row" id="exp_imp" style="border-bottom: 2px solid maroon;">
+                <!-- Row1: Upload button -->
                 <div id="import_div" class="col-sm-2">
-                    <input type="file" class="filestyle" data-input="false" text="Import"></div>
-                <div class="col-sm-2" align="left">
+                    <input type="file" class="filestyle" data-input="false" text="Import">
+                </div>
+                <!-- Row4: Generate split button-->
+                <div id="search_div" class="col-sm-2" style="padding-top: 2px">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
+                        Generate/Query <span class="caret"></span>
+                        <span class="sr-only"></span>
+                        </button>
+                        <ul class="dropdown-menu" border: 1px solid black;>
+                            <li><a class="btn btn-default" onclick="query_global_registry()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Query Global Registry</b></a></li>
+                            <li><a class="btn btn-default" onclick="generate_guid()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Generate your GUID</b></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Row5: Account split button-->
+                <div id="add_new_div" class="col-sm-2" style="padding-bottom: 2px">
+                   <div class="dropdown">
+                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
+                        Your Account <span class="caret"></span>
+                        <span class="sr-only"></span> 
+                        </button>
+                        <ul class="dropdown-menu" style="border: 1px solid black;">
+                            <li><a class="btn btn-default" id="add_user_id" onclick="add_user_id()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User ID</a></li>
+                            <li><a class="btn btn-default" id="remove_user_id" onclick="remove_user_id()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User ID</a></li>
+                            <li><a class="btn btn-default" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Add a Friend</a></li>
+                            <li><a class="btn btn-default" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"> Login</span></a></li>
+                        </ul>
+                    </div>
+               </div>
+               <!--Row3: Message strip to display -->
+                <div id="message_lbl" class="col-sm-3" style="padding-top: 2px;" align="left"> </div>
+                <!--Row2: search button and Box -->
+                <div class="col-sm-3" align="right">
                     <div class="input-group" style="padding-top: 2px;">
                         <input type="text" class="form-control" style="height:30px;" placeholder="Search a friend..." id="searchBox">
                         <span class="input-group-btn">
                       <button class="btn btn-primary" style="height:30px;" type="button" id="searchBtn" onclick="search_friend()" >Go!</button>
                     </span></div>
                 </div>
-                <div id="message_lbl" class="col-sm-2" align="right" style="padding-top: 2px;"></div>
-
-
-                <div id="search_div" class="col-sm-3" align="right" style="padding-top: 2px">
-                    <!-- Split button -->
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Please select your query from the dropdown"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true" ></span> Generate/Query</button>
-                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="btn btn-default" onclick="query_global_registry()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span><u>Query Global Registry</u></b></a></li>
-                            <li><a class="btn btn-default" onclick="generate_guid()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span><u>Generate your GUID</u></b></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="add_new_div" class="col-sm-3" align="right">
-                    <button style="height:35px;" class="btn btn-primary" id="add_user_id" onclick="add_user_id()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>userID</button>
-                    <button style="height:35px;" class="btn btn-danger" id="remove_user_id" onclick="remove_user_id()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>userID</button>
-                    <button style="height:35px;" class="btn btn-primary" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button></div>
             </div>
+            <div id="login"></div>
+            <!-- Friend List and Details-->
             <div class="row" id="heading">
                 <div class="col-sm-6">
                     <p style="text-align:center;">
                         <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Friend List</u></span>
                     </p>
+
+                    <div id="left-div" style="overflow: auto; height: 350px; border: 4px solid maroon"><h4 align='center' style='border: 1px solid #333; background: grey'> <b>Please import your contacts using import button</b> </h4>
                 </div>
+            </div>
                 <div class="col-sm-6">
                     <p style="text-align:center;">
                         <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Your Friend's Details</u></span>
                     </p>
+                    
+                    <div id="right-div" style="overflow: auto; height: 350px;border: 4px solid maroon"><h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>
+                </div>
                 </div>
             </div>
-            <div class="row" id="div2">
-                <div id="left-div" class="col-sm-6" style="overflow: auto; height: 350px; border: 4px solid maroon">
-                </div>
-                <div id="right-div" class="col-sm-6" style="overflow: auto; height: 350px;border: 4px solid maroon">
-                    <h4 align='center' style='border: 1px solid #333; background: grey'><b>Click on Friend's link to see Friend's Details</b></h4>
-                </div>
-            </div>
+
+
+          <!-- Link for exporting friendlist-->
             <div id="export_link" class="col-sm-6">
                 <h6 align="left" style="color: red;">**Download contact link will appear here</h6></div>
         </div>
-
+    </div>
         <!--FOOTER-->
         <div id='footer' class='footer'></div>
-    </div>
+
 </body>
 
 </html>
