@@ -23,10 +23,11 @@
 import URI from 'urijs';
 import RuntimeFactory from './RuntimeFactory';
 
-if(parent.cordova){
-    window.cordova = true
-    window.open = function(url){ return parent.cordova.InAppBrowser.open(url, '_blank', 'location=no,toolbar=no')};
-}
+try{
+    window.cordova = parent.cordova !== undefined
+    if(window.cordova)
+        window.open = function(url){ return parent.cordova.InAppBrowser.open(url, '_blank', 'location=no,toolbar=no')};
+}catch(err){ console.log('cordova not supported') }
 function returnHyperty(source, hyperty){
     source.postMessage({to: 'runtime:loadedHyperty', body: hyperty}, '*')
 }
