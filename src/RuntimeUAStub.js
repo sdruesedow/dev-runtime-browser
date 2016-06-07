@@ -56,7 +56,7 @@ let runtimeProxy = {
 let RethinkBrowser = {
     install: function({domain, runtimeURL, development}={}){
         return new Promise((resolve, reject)=>{
-            let runtime = this.getRuntime(runtimeURL, domain, development)
+            let runtime = this._getRuntime(runtimeURL, domain, development)
             iframe = createIframe(`https://${runtime.domain}/.well-known/runtime/index.html?runtime=${runtime.url}&development=${development}`);
             let installed = (e)=>{
                 if(e.data.to === 'runtime:installed'){
@@ -69,9 +69,9 @@ let RethinkBrowser = {
         });
     },
 
-    getRuntime (runtimeURL, domain, development) {
+    _getRuntime (runtimeURL, domain, development) {
         if(!!development){
-            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime' //`https://${domain}/resources/descriptors/Runtimes.json`
+            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime' 
             domain = domain || new URI(runtimeURL).host()
         }else{
             runtimeURL = runtimeURL || `https://catalogue.${domain}/.well-known/runtime/default`
