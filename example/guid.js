@@ -36,11 +36,10 @@ if (document.readyState === 'complete') {
 var runtimeLoader;
 
 function documentReady() {
-
   // ready();
-
   let hypertyHolder = $('.hyperties');
   hypertyHolder.removeClass('hide');
+    window.addEventListener("message", printContact, false);
 
   rethink.install({
     "domain": domain,
@@ -53,8 +52,23 @@ function printContact(event){
     let userFirstName = event.data.body.firstName;
     let userLastName = event.data.body.lastName;
     $('.testResult').append("<h3>The user's firstName is <u>"+ userFirstName+"<h3></u> and Last Name is <u>"+ userLastName+"</u></h3>");
+  }else if(event.data.to =='runtime:checkGUID'){
+    let found =event.data.check; // true if there ist contacts list associated with the GUID,
+    let FoF = event.data.usersFoF;
+
+    console.log('@@@ Recrevived Postmessage' + event.data.to);
+
+    let DirectContact =event.data.usersDirectContact;
+    if (event.data.check){  
+      console.log('FoF : '+ FoF);
+      console.log(' DirectContact : '+ DirectContact);
+    }else if(!event.data.check){
+      console.log('User with no contacts \n GUID: ' + event.data.body.GUID )
+    };
+
   }
 }
+
 
 function runtimeInstalled(runtime) {
   console.log(runtime);
@@ -73,7 +87,6 @@ function runtimeInstalled(runtime) {
     runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
     runtime.calculateBloomFilter1Hop();
     runtime.signGlobalRegistryRecord();
-    window.addEventListener("message", printContact, false);
   //let hypertyObserver = 'hyperty-catalogue://' + runtime.domain + '/.well-known/hyperty/HelloWorldObserver';
 
   // Load First Hyperty

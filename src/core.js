@@ -81,12 +81,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log(runtime.graphConnector.generateGUID());
                 console.log("##GUID generated");
             } else if (event.data.to === 'graph:addUserID') {
-                console.log('##try adding contact');
+                console.log('##try adding userID');
                 console.log(runtime.graphConnector.addUserID(event.data.body.userID));
             } else if (event.data.to === 'graph:removeUserID') {
                 let userID = event.data.body.userID;
                 console.log('##Removing contact with userID: ' + userID);
-                console.log(runtime.graphConnector.removeUserID(userID));
+                runtime.graphConnector.removeUserID(userID);
                 console.log("UserID removed successfully");
             } else if (event.data.to === 'graph:addContact') {
                 let guid = event.data.body.guid;
@@ -107,22 +107,34 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("Please enter the name");
                     parent.postMessage({to:'runtime:getContact', body:{"firstName" : "", "lastName" : "", "userExist" : false, "users" : user}}, '*');
                 }
-            } else if (event.data.to === 'graph:checkGUID') {
+            } else if (event.data.to === 'graph:checkGUID'){
                 let guid = event.data.body.guid;
-                console.log("##Inside core: finding user with GUID: " + guid);
+
+                console.log("##Inside core: looking conctacts of user with GUID: " + guid);
                 let usersDirectContact = runtime.graphConnector.checkGUID(guid)[0][0];
                 let usersFoF = runtime.graphConnector.checkGUID(guid)[0][1];
+
                 if (usersDirectContact != null) {
-                    console.log("User Found from its GUID: \n FirstName " + usersDirectContact.firstName +
+                    console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
                         "\n LastName " + usersDirectContact.lastName +
                         "\n GUID " + usersDirectContact.guid);
+                parent.postMessage({to:'runtime:checkGUID', body :{"check": true, 'GUID': guid, 'usersFoF': usersFoF,'usersDirectContact':usersDirectContact}}, '*');
+                    // Returns 2 Array of conected friends
+                   //parent.postMessage({to:'runtime:checkGUID', body:{"userDirectContacts" : usersDirectContact, "usersFoF" : usersFoF}}, '*');
                 } else {
-                    console.log("##This user does not exist!!");
+                    console.log("##This user does not have any contacts stored!!");
+                    parent.postMessage({to:'runtime:checkGUID',body :{"check": false, 'GUID': guid}}, '*');
+
                 }
             } else if (event.data.to === 'graph:removeContact') {
                 let guid = event.data.body.guid;
+
                 console.log("##Inside core: Deleting user with GUID: " + guid);
-                let usersDirectContact = runtime.graphConnector.removeContact(guid);
+                //asynchronous implementation ?? how
+
+
+                let tmp = runtime.graphConnector.removeContact(guid);
+
                 console.log("##User with " + guid + " is been deleted");
             } else if (event.data.to === 'graph:useGUID') {
                 let seed = event.data.body.seed;
