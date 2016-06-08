@@ -257,7 +257,7 @@
     }
 
     function query_global_registry() {
-        window.runtime.runtime.queryGlobalRegistry('shdfjdskfjs7fdsd87few87fs898sa');
+        window.runtime.runtime.queryGlobalRegistry('f1CuNFhbYbPIR_Ng0GbtncTjoPGPfULY_p9J2nLX7bw');
     }
 
     function generate_guid() {
@@ -280,7 +280,7 @@
             '<h4 class="modal-title"><b>Login using Seed</b></h4>' +
             '</div>' +
             '<div class="modal-body">' +
-            '<label align="left">Please enter the 12 word seed</label>' +
+            '<label align="left">Please enter the 16 word seed</label>' +
             '<input name="seed" type="text" id="seed" style=" width: 500px;" placeholder="Enter seed..."/>' +
             '</div>' +
             '<div class="modal-footer">' +
@@ -354,7 +354,7 @@
                     "GUID": guid.val()
                     //"mnum": mnum.val()
                 });
-                window.runtime.runtime.addContact(guid.val(), fname.val().toLowerCase(), lname.val().toLowerCase());
+                window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
                 window.runtime.runtime.checkGUID(guid.val());
                 
                 $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:FFFFFF;" class="label label-success"> *User ' + fname.val()+ ' is added</span>');
