@@ -96,7 +96,7 @@
             table += '</table>';
             $("#left-div").html(table);
         } else {
-            $("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file, Please upload another file\"</b></h4> ");
+            $("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file, please upload another file\"</b></h4> ");
         }
     }
 
@@ -296,11 +296,13 @@
         var dialog, form;
         var fname = $("#fname");
         var lname = $("#lname");
-        var mnum = $("#mnum");
-        var age = $("#age");
+        //var mnum = $("#mnum");
+        //var age = $("#age");
         var guid = $("#guid");
-        allFields = $([]).add(fname).add(lname).add(age).add(guid).add(mnum),
-            tips = $(".validateTips");
+        //allFields = $([]).add(fname).add(lname).add(age).add(guid).add(mnum),
+           // tips = $(".validateTips");
+		allFields = $([]).add(fname).add(lname).add(guid),
+		    tips = $(".validateTips");
 
         function updateTips(t) {
             tips
@@ -338,19 +340,19 @@
             valid = valid && checkLength(fname, "firstname", 1, 20);
             valid = valid && checkLength(lname, "lastlname", 1, 20);
             valid = valid && checkLength(guid, "guid", 8, 32);
-            valid = valid && checkLength(age, "age", 1, 2);
+            //valid = valid && checkLength(age, "age", 1, 2);
             valid = valid && checkRegexp(fname, /^[a-zA-Z]*$/, "firstname can consist of a-z only");
             valid = valid && checkRegexp(lname, /^[a-zA-Z]*$/, "lastname can consist of a-z only");
             valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
-            valid = valid && checkRegexp(age, /^\d+$/, "age can only be a two digit number");
+            //valid = valid && checkRegexp(age, /^\d+$/, "age can only be a two digit number");
             //valid = valid && checkRegexp( mnum, /^[0-9]\d{10}$/, "Mobile Number can only be 10 digits long" );
             if (valid) {
                 obj.push({
                     "fname": fname.val(),
                     "lname": lname.val(),
-                    "age": age.val(),
-                    "GUID": guid.val(),
-                    "mnum": mnum.val()
+                    //"age": age.val(),
+                    "GUID": guid.val()
+                    //"mnum": mnum.val()
                 });
                 window.runtime.runtime.addContact(guid.val(), fname.val().toLowerCase(), lname.val().toLowerCase());
                 window.runtime.runtime.checkGUID(guid.val());
@@ -369,7 +371,7 @@
             width: 350,
             modal: true,
             buttons: {
-                "Create an account": addUser,
+                "Add": addUser,
                 Cancel: function() {
                     dialog.dialog("close");
                 }
@@ -430,10 +432,10 @@
                 <input name="fname" type="text" id="fname" class="text ui-widget-content ui-corner-all" />
                 <label>Last Name</label>
                 <input name="lname" type="text" id="lname" class="text ui-widget-content ui-corner-all" /><br>
-                <label>Age</label>
+                <!--label>Age</label>
                 <input name="age" type="text" id="age" class="text ui-widget-content ui-corner-all" /><br>
                 <label for="mnum">Mobile Number</label>
-                <input name="mnum" type="text" id="mnum" class="text ui-widget-content ui-corner-all" /><br>
+                <input name="mnum" type="text" id="mnum" class="text ui-widget-content ui-corner-all" /><br-->
                 <label for="guid">GUID</label>
                 <input name="guid" type="text" id="guid" class="text ui-widget-content ui-corner-all" />
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
@@ -444,17 +446,17 @@
     <!--CONTAINER-->
     <div id="container">
         <!--HEADER-->
-        <div id="header">
+        <!--div id="header">
             <div id="logo"><img src="images/logo.jpg" alt="reTHINK logo" height="50" width="300"></div>
 
             
-        </div>
+        </div -->
         <!--CONTENT AREA-->
         <div id='body'>
             <div id="div1">
                 <div id="content_area" class="col-sm-12">
                     <p style="text-align:center;">
-                        <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF; ">AddressBook</span>
+                        <span style="font-family:Verdana;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF; ">Address Book</span>
                     </p>
                 </div>
             </div>
@@ -465,16 +467,19 @@
                 <div id="import_div" class="col-sm-2">
                     <input type="file" class="filestyle" data-input="false" text="Import">
                 </div>
+				<!-- Row2: Add Contact button -->
+                <div id="add_contact_div" class="col-sm-2">
+					<a class="btn btn-default" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Add a contact</a>
+                </div>
                 <!-- Row4: Generate split button-->
                 <div id="search_div" class="col-sm-2" style="padding-top: 2px">
                     <div class="btn-group">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
-                        Generate/Query <span class="caret"></span>
+                        Query <span class="caret"></span>
                         <span class="sr-only"></span>
                         </button>
                         <ul class="dropdown-menu" border: 1px solid black;>
                             <li><a class="btn btn-default" onclick="query_global_registry()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Query Global Registry</b></a></li>
-                            <li><a class="btn btn-default" onclick="generate_guid()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Generate your GUID</b></a></li>
                         </ul>
                     </div>
                 </div>
@@ -482,14 +487,14 @@
                 <div id="add_new_div" class="col-sm-2" style="padding-bottom: 2px">
                    <div class="dropdown">
                         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
-                        Your Account <span class="caret"></span>
+                        Account <span class="caret"></span>
                         <span class="sr-only"></span> 
                         </button>
                         <ul class="dropdown-menu" style="border: 1px solid black;">
+						    <li><a class="btn btn-default" onclick="generate_guid()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Generate GUID</b></a></li>
+							<li><a class="btn btn-default" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"> Use existing GUID</span></a></li>
                             <li><a class="btn btn-default" id="add_user_id" onclick="add_user_id()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User ID</a></li>
                             <li><a class="btn btn-default" id="remove_user_id" onclick="remove_user_id()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User ID</a></li>
-                            <li><a class="btn btn-default" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Add a Friend</a></li>
-                            <li><a class="btn btn-default" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"> Login</span></a></li>
                         </ul>
                     </div>
                </div>
@@ -498,9 +503,9 @@
                 <!--Row2: search button and Box -->
                 <div class="col-sm-3" align="right">
                     <div class="input-group" style="padding-top: 2px;">
-                        <input type="text" class="form-control" style="height:30px;" placeholder="Search a friend..." id="searchBox">
+                        <input type="text" class="form-control" style="height:30px;" placeholder="Filter contacts" id="searchBox">
                         <span class="input-group-btn">
-                      <button class="btn btn-primary" style="height:30px;" type="button" id="searchBtn" onclick="search_friend()" >Go!</button>
+                      <button class="btn btn-primary" style="height:30px;" type="button" id="searchBtn" onclick="search_friend()" >Go</button>
                     </span></div>
                 </div>
             </div>
@@ -509,18 +514,18 @@
             <div class="row" id="heading">
                 <div class="col-sm-6">
                     <p style="text-align:center;">
-                        <span style="font-family:Arial;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Friend List</u></span>
+                        <span style="font-family:Arial;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Contacts</u></span>
                     </p>
 
-                    <div id="left-div" style="overflow: auto; height: 350px; border: 4px solid maroon" align="center"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using import button</span> </h2><img src="/images/importContacts.jpeg" alt="Contact import" >
+                    <div id="left-div" style="overflow: auto; height: 350px; border: 4px solid maroon" align="center"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using the import button</span> </h2><img src="/images/importContacts.jpeg" alt="Contact import" >
                 </div>
             </div>
                 <div class="col-sm-6">
                     <p style="text-align:center;">
-                        <span style="font-family:Arial;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Your Friend's Details</u></span>
+                        <span style="font-family:Arial;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Contact's Details</u></span>
                     </p>
                     
-                    <div align="center" id="right-div" style="overflow: auto; height: 350px;border: 4px solid maroon"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using import button</span> </h2><img src="/images/contact-det.jpeg" alt="Contact Details" >
+                    <div align="center" id="right-div" style="overflow: auto; height: 350px;border: 4px solid maroon"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using the import button</span> </h2><img src="/images/contact-det.jpeg" alt="Contact Details" >
                 </div>
                 </div>
             </div>
@@ -528,7 +533,7 @@
 
           <!-- Link for exporting friendlist-->
             <div id="export_link" class="col-sm-6">
-                <h6 align="left" style="color: red;">**Download contact link will appear here</h6></div>
+                <h6 align="left" style="color: gray;">**Download contact link will appear here</h6></div>
         </div>
     </div>
         <!--FOOTER-->
