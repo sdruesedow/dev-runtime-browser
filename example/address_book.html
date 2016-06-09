@@ -29,6 +29,15 @@
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 <script src="./guid.bundle.js"></script>
 <script type="text/javascript">
+	// You can change this at your own domain
+	let domain = "felix.dev"; // change to your URL!
+		window.runtime = {
+		"domain": domain
+	}
+
+	// Hack because the GraphConnector jsrsasign module;
+	window.KJUR = {};
+
     var obj = []; //Empty JSON Object to store the friendlist temporarily 
 
     //Call function to be called on click event of call button
@@ -257,7 +266,7 @@
     }
 
     function query_global_registry() {
-        window.runtime.runtime.queryGlobalRegistry('f1CuNFhbYbPIR_Ng0GbtncTjoPGPfULY_p9J2nLX7bw');
+        window.runtime.runtime.queryGlobalRegistry('HmDLrX7RgrZc28RHwNGIffcckIEbbu1vCBKYoyVPOSQ');
     }
 
     function generate_guid() {
