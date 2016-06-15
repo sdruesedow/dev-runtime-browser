@@ -16,7 +16,7 @@
     "signature": "",
     "messageSchemas": "",
     "configuration": {
-      "url": "wss://msg-node.felix.dev/ws"
+      "url": "wss://msg-node.felix.dev:9090/ws"
     },
     "constraints": "",
     "hypertyCapabilities": "",

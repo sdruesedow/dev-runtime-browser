@@ -211,7 +211,7 @@
 
     function search_friend() {
         var name = $("#searchBox").val();
-        window.runtime.runtime.getContact(name.toLowerCase());
+        window.runtime.runtime.getContact(name);
         window.addEventListener("message", getContact, false);
     }
 
@@ -413,11 +413,11 @@
             createFriendList(obj);
             export_list(obj);
             for (var i = 0; i < obj.length; i++) {
-                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname.toLowerCase(), obj[i].lname.toLowerCase());
+                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname, obj[i].lname);
             };
             if(obj.length!=0){
                 for (var i = 0; i < obj.length; i++) {
-                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname.toLowerCase(), obj[i].lname.toLowerCase());
+                window.runtime.runtime.addContact(obj[i].guid, obj[i].fname, obj[i].lname);
                 };
                 details(0);
                 $("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> * ' + obj.length+ ' contacts have been imported</span>');
@@ -477,14 +477,14 @@
                     <input type="file" class="filestyle" data-input="false" text="Import">
                 </div>
 				<!-- Row2: Add Contact button -->
-                <div id="add_contact_div" class="col-sm-2">
-					<a class="btn btn-default" id="add_new_btn"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Add a contact</a>
+                <div class="col-sm-2" style="padding-top: 2px;" >
+					<button class="btn btn-info" id="add_new_btn" style="height:33px; color:white; width:145px "><span class="glyphicon glyphicon-plus" aria-hidden="true"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span> Add a contact</button>
                 </div>
                 <!-- Row4: Generate split button-->
                 <div id="search_div" class="col-sm-2" style="padding-top: 2px">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
-                        Query <span class="caret"></span>
+                        <button type="button" style="width:145px;" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span> Query <span class="caret"></span>
                         <span class="sr-only"></span>
                         </button>
                         <ul class="dropdown-menu" border: 1px solid black;>
@@ -495,15 +495,15 @@
                 <!-- Row5: Account split button-->
                 <div id="add_new_div" class="col-sm-2" style="padding-bottom: 2px">
                    <div class="dropdown">
-                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown">
+                        <button type="button" style="width:145px;" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Please select the option from the dropdown"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                         Account <span class="caret"></span>
                         <span class="sr-only"></span> 
                         </button>
                         <ul class="dropdown-menu" style="border: 1px solid black;">
 						    <li><a class="btn btn-default" onclick="generate_guid()"><b><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Generate GUID</b></a></li>
-							<li><a class="btn btn-default" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"> Use existing GUID</span></a></li>
-                            <li><a class="btn btn-default" id="add_user_id" onclick="add_user_id()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User ID</a></li>
-                            <li><a class="btn btn-default" id="remove_user_id" onclick="remove_user_id()"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User ID</a></li>
+							<li><a class="btn btn-default" data-toggle="modal" data-target="#myLogin"><b><span class="glyphicon glyphicon-log-in"> </span> Use existing GUID</b></a></li>
+                            <li><a class="btn btn-default" id="add_user_id" onclick="add_user_id()"><b><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add User ID</b></a></li>
+                            <li><a class="btn btn-default" id="remove_user_id" onclick="remove_user_id()"><b><span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Remove User ID</b></a></li>
                         </ul>
                     </div>
                </div>
@@ -514,7 +514,7 @@
                     <div class="input-group" style="padding-top: 2px;">
                         <input type="text" class="form-control" style="height:30px;" placeholder="Filter contacts" id="searchBox">
                         <span class="input-group-btn">
-                      <button class="btn btn-primary" style="height:30px;" type="button" id="searchBtn" onclick="search_friend()" >Go</button>
+                      <button class="btn btn-primary" style="height:30px; width:50px; color:white;" type="button" id="searchBtn" onclick="search_friend()" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span> </button>
                     </span></div>
                 </div>
             </div>
@@ -526,7 +526,7 @@
                         <span style="font-family:Arial;font-size:24px;font-style:normal;font-weight:bold;text-decoration:none;text-transform:none;color:FFFFFF;"><u>Contacts</u></span>
                     </p>
 
-                    <div id="left-div" style="overflow: auto; height: 350px; border: 4px solid maroon" align="center"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using the import button</span> </h2><img src="/images/importContacts.jpeg" alt="Contact import" >
+                    <div align="center" id="left-div" style="overflow: auto; height: 350px; border: 4px solid maroon"><h2> <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-info"> Please import contacts using the import button</span> </h2><img src="/images/importContacts.jpeg" alt="Contact import" >
                 </div>
             </div>
                 <div class="col-sm-6">
