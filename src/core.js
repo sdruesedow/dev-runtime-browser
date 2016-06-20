@@ -77,9 +77,20 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'core:loadStub') {
                 runtime.loadStub(event.data.body.domain)
             } else if (event.data.to === 'graph:generateGUID') {
+
                 console.log('##try generating GUID');
-                console.log(runtime.graphConnector.generateGUID());
-                console.log("##GUID generated");
+
+                let userGUID = runtime.graphConnector.generateGUID();
+                if (userGUID != null) {
+                  parent.postMessage({to:'runtime:generateGUID', body:{"guid" : userGUID, }}, '*');
+                  console.log('## GUID generated!')
+
+
+                }else {
+
+                    console.log('##Could not generate GUID!')
+                };
+                   
             } else if (event.data.to === 'graph:addUserID') {
                 console.log('##try adding userID');
                 console.log(runtime.graphConnector.addUserID(event.data.body.userID));
@@ -111,10 +122,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
 
                 console.log("##Inside core: looking conctacts of user with GUID: " + guid);
+                
                 let usersDirectContact = runtime.graphConnector.checkGUID(guid)[0][0];
                 let usersFoF = runtime.graphConnector.checkGUID(guid)[0][1];
 
-                if (usersDirectContact != null) {
+                if (usersDirectContact != null || usersDirectContact != '') {
                     console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
                         "\n LastName " + usersDirectContact.lastName +
                         "\n GUID " + usersDirectContact.guid);
@@ -132,10 +144,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: Deleting user with GUID: " + guid);
                 //asynchronous implementation ?? how
 
-
+                
                 let tmp = runtime.graphConnector.removeContact(guid);
-
+                
                 console.log("##User with " + guid + " is been deleted");
+
+
             } else if (event.data.to === 'graph:useGUID') {
                 let seed = event.data.body.seed;
                 console.log("##Inside core: generating keys using seed: " + seed);
