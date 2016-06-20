@@ -166,7 +166,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:queryGlobalRegistry') {
                 let guid = event.data.body.guid;
                 console.log("##Inside core: Querying with GUID: " + guid);
-                console.log("##Querying done and returned promise object is: " + runtime.graphConnector.queryGlobalRegistry(guid));
+                //console.log("##Querying done and returned promise object is: " + runtime.graphConnector.queryGlobalRegistry(guid));
+                runtime.graphConnector.queryGlobalRegistry(guid).then(function(result){
+                    console.log(">>>>>>>>>I'm inside");
+                }).catch(function(err){
+                    console.log(">>>>>>>>Printing error "+ err);
+                })
             } else if (event.data.to === 'graph:calculateBloomFilter1Hop') {
                 console.log("##Inside bloom filter");
                 console.log("##Calculating Bloom filter : " + runtime.graphConnector.calculateBloomFilter1Hop());
