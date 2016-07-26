@@ -51,6 +51,19 @@ let runtimeProxy = {
     requireProtostub: (domain)=>{
         iframe.contentWindow.postMessage({to:'core:loadStub', body:{"domain": domain}}, '*')
     },
+
+    close: (domain)=>{
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:runtimeClosed'){
+                    window.removeEventListener('message', loaded);
+                    resolve(resolve(e.data.body));
+                }
+            };
+            window.addEventListener('message', loaded);                     
+            iframe.contentWindow.postMessage({to:'core:close', body:{}}, '*')
+        })
+    },
 };
 
 let RethinkBrowser = {

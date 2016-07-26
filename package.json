@@ -57,11 +57,18 @@
   "dependencies": {
     "array.observe": "0.0.1",
     "babel-polyfill": "^6.6.1",
+    "copyfiles": "0.2.2",
+    "eslint-plugin-react": "5.2.2",
+    "gulp-uglify": "1.5.4",
     "indexeddbshim": "^2.2.1",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
+    "jspm": "0.16.39",
+    "karma-browserify": "5.1.0",
+    "karma-jspm": "2.2.0",
     "mutationobserver-shim": "^0.3.1",
     "object.observe": "^0.2.6",
-    "runtime-core": "git+https://github.com/reTHINK-project/dev-runtime-core.git#dev-0.5",
-    "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#develop",
+    "runtime-core": "git+https://github.com/reTHINK-project/dev-runtime-core.git#develop",
+    "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#919dea52293191b7874b14957599ec48efb2f501",
     "tv4": "^1.2.7",
     "urijs": "^1.17.1"
   }

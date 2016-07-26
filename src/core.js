@@ -77,7 +77,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 }
             }else if(event.data.to==='core:loadStub'){
                 runtime.loadStub(event.data.body.domain)
+            }else if(event.data.to==='core:close'){
+                runtime.close()
+                    .then(event.source.postMessage({to: 'runtime:runtimeClosed', body: true}, '*'))
+                    .catch(event.source.postMessage({to: 'runtime:runtimeClosed', body: false}, '*'))
             }
+
         }, false);
         parent.postMessage({to:'runtime:installed', body:{}}, '*');
     });
