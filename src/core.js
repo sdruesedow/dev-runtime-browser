@@ -84,5 +84,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             }
 
         }, false);
+        window.addEventListener('beforeunload', (e) => {
+            runtime.close() 
+        })
         parent.postMessage({to:'runtime:installed', body:{}}, '*');
     });

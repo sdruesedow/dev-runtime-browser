@@ -34,7 +34,7 @@ let buildMsg = (hypertyComponent, msg) => {
        }
 };
 
-let runtimeProxy = {
+let runtimeAdapter = {
     requireHyperty: (hypertyDescriptor)=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -52,7 +52,7 @@ let runtimeProxy = {
         iframe.contentWindow.postMessage({to:'core:loadStub', body:{"domain": domain}}, '*')
     },
 
-    close: (domain)=>{
+    close: ()=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:runtimeClosed'){
@@ -74,7 +74,7 @@ let RethinkBrowser = {
             let installed = (e)=>{
                 if(e.data.to === 'runtime:installed'){
                     window.removeEventListener('message', installed);
-                    resolve(runtimeProxy);
+                    resolve(runtimeAdapter);
                 }
             };
             window.addEventListener('message', installed);
