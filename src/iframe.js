@@ -23,6 +23,14 @@
 export function create(src){
     var iframe = document.createElement('iframe');
     iframe.setAttribute('id', 'rethink');
+    iframe.style.position = "fixed"
+    iframe.style.top = "0"
+    iframe.style.left = "0"
+    iframe.style.right = "0"
+    iframe.style.bottom = "0"
+    iframe.style.border = "5px solid red"
+    iframe.width = "100%"
+    iframe.height = "100%"
     iframe.setAttribute('seamless', '');
     iframe.setAttribute('src', src);
     iframe.setAttribute('sandbox', 'allow-forms allow-scripts allow-popups-to-escape-sandbox allow-popups allow-same-origin allow-top-navigation');

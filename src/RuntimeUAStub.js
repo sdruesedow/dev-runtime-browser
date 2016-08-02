@@ -66,6 +66,14 @@ let runtimeAdapter = {
     },
 };
 
+let GuiManager = function(){
+    window.addEventListener('message', (e)=>{
+        if(!e.data.to.endsWith('gui-manager'))
+            return
+
+        iframe.style.display = (e.data.body.method === 'hideAdminPage')?'none':'block'
+    })
+}
 let RethinkBrowser = {
     install: function({domain, runtimeURL, development}={}){
         return new Promise((resolve, reject)=>{
@@ -79,6 +87,7 @@ let RethinkBrowser = {
             };
             window.addEventListener('message', installed);
             app.create(iframe);
+            GuiManager()
         });
     },
 

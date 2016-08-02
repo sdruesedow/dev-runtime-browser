@@ -29,7 +29,7 @@ function create(iframe){
         iframe.contentWindow.postMessage(msg, '*');
     };
     window.addEventListener('message', function(event){
-        if(event.data.to.startsWith('runtime:loadedHyperty'))
+        if(event.data.to.startsWith('runtime:loadedHyperty') || event.data.to.endsWith('gui-manager'))
             return;
 
         window._miniBus._onMessage(event.data);
