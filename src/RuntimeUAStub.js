@@ -207,6 +207,19 @@ let runtimeProxy = {
             window.addEventListener('message', loaded);
             iframe.contentWindow.postMessage({to:'graph:signGlobalRegistryRecord', body:{}}, '*')
         });
+    },
+
+    editContact: (guidOld, fname, lname, guidNew, privStatus)=> {
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:loadedHyperty'){
+                    window.removeEventListener('message', loaded);
+                    resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
+                }
+            };
+            window.addEventListener('message', loaded);
+            iframe.contentWindow.postMessage({to:'graph:editContact', body:{"guidOld": guidOld, "fname": fname, "lname": lname, "guidNew": guidNew, "privStatus": privStatus}}, '*')
+        });
     }
 
 };

@@ -87,6 +87,8 @@ function runtimeInstalled(runtime) {
     runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
     runtime.calculateBloomFilter1Hop();
     runtime.signGlobalRegistryRecord();
+    runtime.addContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime');
+    runtime.editContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime', 'hfjdsbsjfhdiusfbuidshfcudss87cv7ds8c7d', true);
   //let hypertyObserver = 'hyperty-catalogue://' + runtime.domain + '/.well-known/hyperty/HelloWorldObserver';
 
   // Load First Hyperty
