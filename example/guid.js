@@ -72,7 +72,14 @@ function messageHandler(event){
   }else if(event.data.to === 'runtime:getGroup'){
     let tempGroup = event.data.body.result;
     console.log(tempGroup);
+  }else if(event.data.to === "runtime:getGroupNames"){
+    let tempGroupNames = event.data.body.result;
+    console.log("Group names of the user " + tempGroupNames)
+  }else if( event.data.to ==='runtime:generateGUID'){
+    console.log('generateGUID: '+ event.data.body.guid)
+
   } 
+
 }
 
 
@@ -116,22 +123,24 @@ function runtimeInstalled(runtime) {
   //});
   });
 
-$('#generateGUID').on('click', ()=>{
+  $('#useGUID').on('click', ()=>{
+      runtime.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp');
+  });
+
+  $('#generateGUID').on('click', ()=>{
         runtime.generateGUID();
 
   });
-$('#addUserID').on('click', ()=>{
+
+  $('#addUserID').on('click', ()=>{
     runtime.addUserID('facebook.com/felix');
 
   });
-$('#removeUserID').on('click', ()=>{
+
+  $('#removeUserID').on('click', ()=>{
     runtime.removeUserID('facebook.com/felix');
 
   });
-
-
-
-
 
   $('#addContact').on('click', ()=>{
     runtime.addContact('budc8fucd8cdsc98dc899dc', 'reThinkUser', 'Test');
@@ -140,25 +149,21 @@ $('#removeUserID').on('click', ()=>{
 
   });
 
-
-
   $('#removeContact').on('click', ()=>{
     runtime.removeContact('budc8fucd8cdsc98dc899dc');
     runtime.removeContact('123456');
     runtime.removeContact('1234');
 
-
   });
 
   $('#getAllContacts').on('click', ()=>{
-     runtime.getAllContacts();
-      
-
+     runtime.getAllContacts(); 
   });
 
   $('#addGroupName').on('click', ()=>{
     runtime.addGroupName('123456', 'Winterfell');
     runtime.addGroupName('1234', 'Winterfell');
+    runtime.addGroupName('budc8fucd8cdsc98dc899dc', 'Football');
 
   });
 
@@ -167,7 +172,10 @@ $('#removeUserID').on('click', ()=>{
       
 
   });
- 
+   $('#getGroupNames').on('click', ()=>{
+     runtime.getGroupNames('Winterfell');
+  
+  });
   $('#removeGroupName').on('click', ()=>{
       runtime.removeGroupName('123456', 'Winterfell');
 
@@ -182,16 +190,12 @@ $('#removeUserID').on('click', ()=>{
   $('#removeLocation').on('click', ()=>{
      runtime.removeLocation('budc8fucd8cdsc98dc899dc');
   
-
   });
 
-
-
-
- 
+  $('#getGroupNames').on('click', ()=>{
+     runtime.getGroupNames('Winterfell');
   
-
-
+  });
 
 
 }
