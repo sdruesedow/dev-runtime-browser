@@ -12,3 +12,23 @@ build.js.map
 # Temporal files
 *.swp
 *.swo
+
+# compiled runtime
+bin/context-services.js
+bin/context-services.js.map
+bin/core.js
+bin/core.js.map
+bin/rethink.js
+bin/rethink.js.map
+
+# compiled runtime
+example/.well-known/runtime/context-services.js
+example/.well-known/runtime/context-services.js.map
+example/.well-known/runtime/core.js
+example/.well-known/runtime/core.js.map
+example/.well-known/runtime/rethink.js
+example/.well-known/runtime/rethink.js.map
+
+# bundle files for guid
+example/guid.bundle.js
+example/guid.bundle.js.map
