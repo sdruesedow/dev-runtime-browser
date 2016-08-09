@@ -168,7 +168,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let fname = event.data.body.fname;
                 let lname = event.data.body.lname;
                 console.log('##Inside Core: Adding a new contact with firstname: ' + fname);
-                //console.log(runtime.graphConnector.addContact(guid, fname, lname));
+                runtime.graphConnector.addContact(guid, fname, lname);
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
                 console.log("##Inside core: finding user with username: " + username);
