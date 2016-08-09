@@ -39,7 +39,7 @@ function documentReady() {
   // ready();
   let hypertyHolder = $('.hyperties');
   hypertyHolder.removeClass('hide');
-    window.addEventListener("message", printContact, false);
+  window.addEventListener("message", messageHandler, false);
 
   rethink.install({
     "domain": domain,
@@ -47,14 +47,14 @@ function documentReady() {
   }).then(runtimeInstalled).catch(errorMessage);
 }
 
-function printContact(event){
-  if(event.data.to == "runtime:getContact"){
+function messageHandler(event){
+    if(event.data.to == "runtime:getContact"){
     let userFirstName = event.data.body.firstName;
     let userLastName = event.data.body.lastName;
     $('.testResult').append("<h3>The user's firstName is <u>"+ userFirstName+"<h3></u> and Last Name is <u>"+ userLastName+"</u></h3>");
   }else if(event.data.to =='runtime:checkGUID'){
-    let found =event.data.check; // true if there ist contacts list associated with the GUID,
-    let FoF = event.data.usersFoF;
+    let found =event.data.body.check; // true if there ist contacts list associated with the GUID,
+    let FoF = event.data.body.usersFoF; 
 
     console.log('@@@ Recrevived Postmessage' + event.data.to);
 
@@ -66,13 +66,20 @@ function printContact(event){
       console.log('User with no contacts \n GUID: ' + event.data.body.GUID )
     };
 
-  }
+  }else if(event.data.to === 'runtime:getAllContacts'){
+    let contactsList = event.data.body.result;
+    console.log(contactsList);
+  }else if(event.data.to === 'runtime:getGroup'){
+    let tempGroup = event.data.body.result;
+    console.log(tempGroup);
+  } 
 }
 
 
 function runtimeInstalled(runtime) {
-  console.log(runtime);
+  console.info(runtime);
   window.runtime = {"runtime": runtime};
+
   $('.getDet').on('click', (e)=>{
     runtime.generateGUID();
     runtime.addUserID('facebook.com/felix');
@@ -92,6 +99,15 @@ function runtimeInstalled(runtime) {
     runtime.signGlobalRegistryRecord();
     runtime.addContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime');
     runtime.editContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime', 'hfjdsbsjfhdiusfbuidshfcudss87cv7ds8c7d', true);
+    runtime.addContact('123456', 'john', 'snow');
+    runtime.addContact('1234', 'Joey', 'Landwunder');
+    runtime.addGroupName('123456', 'Winterfell');
+    runtime.addGroupName('1234', 'Winterfell');
+    runtime.getGroup('Winterfell')
+    runtime.removeGroupName('123456', 'Winterfell');
+    runtime.getAllContacts();
+    runtime.setLocation('123456', 'Berlin');
+    runtime.removeLocation('123456');
   //let hypertyObserver = 'hyperty-catalogue://' + runtime.domain + '/.well-known/hyperty/HelloWorldObserver';
 
   // Load First Hyperty
@@ -99,4 +115,83 @@ function runtimeInstalled(runtime) {
   //  errorMessage(reason);
   //});
   });
+
+$('#generateGUID').on('click', ()=>{
+        runtime.generateGUID();
+
+  });
+$('#addUserID').on('click', ()=>{
+    runtime.addUserID('facebook.com/felix');
+
+  });
+$('#removeUserID').on('click', ()=>{
+    runtime.removeUserID('facebook.com/felix');
+
+  });
+
+
+
+
+
+  $('#addContact').on('click', ()=>{
+    runtime.addContact('budc8fucd8cdsc98dc899dc', 'reThinkUser', 'Test');
+    runtime.addContact('123456', 'john', 'snow');
+    runtime.addContact('1234', 'Joey', 'Landwunder');
+
+  });
+
+
+
+  $('#removeContact').on('click', ()=>{
+    runtime.removeContact('budc8fucd8cdsc98dc899dc');
+    runtime.removeContact('123456');
+    runtime.removeContact('1234');
+
+
+  });
+
+  $('#getAllContacts').on('click', ()=>{
+     runtime.getAllContacts();
+      
+
+  });
+
+  $('#addGroupName').on('click', ()=>{
+    runtime.addGroupName('123456', 'Winterfell');
+    runtime.addGroupName('1234', 'Winterfell');
+
+  });
+
+  $('#getGroup').on('click', ()=>{
+    runtime.getGroup('Winterfell')
+      
+
+  });
+ 
+  $('#removeGroupName').on('click', ()=>{
+      runtime.removeGroupName('123456', 'Winterfell');
+
+  });
+
+  $('#setLocation').on('click', ()=>{
+    runtime.setLocation('budc8fucd8cdsc98dc899dc','Berlin');
+     
+
+  });
+
+  $('#removeLocation').on('click', ()=>{
+     runtime.removeLocation('budc8fucd8cdsc98dc899dc');
+  
+
+  });
+
+
+
+
+ 
+  
+
+
+
+
 }

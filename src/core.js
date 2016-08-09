@@ -74,6 +74,70 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     runtime.loadHyperty(descriptor)
                         .then(returnHyperty.bind(null, event.source));
                 }
+            
+
+            }else if(event.data.to === 'graph:getAllContacts'){
+
+                console.log("##Inside core: returning all contacts");
+                let contactsList = runtime.graphConnector.getAllContacts();
+
+                if(contactsList){
+                    parent.postMessage({to:'runtime:getAllContacts', body:{"result" :contactsList}}, '*');
+                }
+
+            }else if(event.data.to === 'graph:removeLocation'){
+                let tmpGuid= event.data.body.guid;
+
+                console.log("##Inside core: removing location from the "+ tmpGuid);
+                let result=runtime.graphConnector.removeLocation(tmpGuid);
+                console.log(result);
+                //parent.postMessage({to:'runtime:removeLocation', body:{"result" :result}}, '*');
+
+
+            }else if(event.data.to === 'graph:setLocation') {
+                let tmpGuid= event.data.body.guid;
+                let tmpLoc= event.data.body.locationName;
+
+                console.log("##Inside core: setting location- "+tmpLoc +"  + for: "+ tmpGuid);
+                let result = runtime.graphConnector.setLocation(tmpGuid,tmpLoc);
+                console.log(result);
+
+               
+            }else if (event.data.to === 'graph:getGroup'){  
+
+                let tmpGroup = event.data.body.groupName;
+                console.log("##Inside core: getting members of the: "+ tmpGroup)
+                let result = runtime.graphConnector.getGroup(tmpGroup);
+                parent.postMessage({to:'runtime:getGroup',body:{"result": result}},'*');
+
+            }else if(event.data.to === 'graph:getGroupNames') {
+
+                console.log("##Inside core: getting all group names of user")
+                let result= runtime.graphConnector.getGroupNames();
+                parent.postMessage({to:'runtime:getGroupNames',body:{"result": result}},'*');
+
+
+            }else if(event.data.to === 'graph:addGroupName') {
+                let tmpGuid= event.data.body.guid;
+                let tmpGroup= event.data.body.groupName;
+                // post message 
+                console.log("##Inside core: adding a groupName: " + tmpGroup +" to "+tmpGuid);
+                let result= runtime.graphConnector.addGroupName(tmpGuid,tmpGroup);
+                parent.postMessage({to:'runtime:addGroupName', body:{"result" :result}}, '*');
+
+
+
+            }else if(event.data.to === 'graph:removeGroupName') {
+
+                let tmpGuid= event.data.body.guid;
+                let tmpGroup= event.data.body.groupName;
+
+                console.log("##Inside core: Removing a groupName: " + tmpGroup +" from "+tmpGuid);
+                let result= runtime.graphConnector.removeGroupName(tmpGuid,tmpGroup);
+                parent.postMessage({to:'runtime:removeGroupName', body:{"result" :result}}, '*');
+
+
+
             } else if (event.data.to === 'core:loadStub') {
                 runtime.loadStub(event.data.body.domain)
             } else if (event.data.to === 'graph:generateGUID') {
@@ -104,7 +168,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let fname = event.data.body.fname;
                 let lname = event.data.body.lname;
                 console.log('##Inside Core: Adding a new contact with firstname: ' + fname);
-                console.log(runtime.graphConnector.addContact(guid, fname, lname));
+                //console.log(runtime.graphConnector.addContact(guid, fname, lname));
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
                 console.log("##Inside core: finding user with username: " + username);
@@ -146,8 +210,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
                 
                 let tmp = runtime.graphConnector.removeContact(guid);
-                
                 console.log("##User with " + guid + " is been deleted");
+                console.log(tmp);
 
 
             } else if (event.data.to === 'graph:useGUID') {
