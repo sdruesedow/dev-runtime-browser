@@ -14,21 +14,24 @@ build.js.map
 *.swo
 
 # compiled runtime
-bin/context-services.js
-bin/context-services.js.map
+bin/context-service.js
+bin/context-service.js.map
 bin/core.js
 bin/core.js.map
 bin/rethink.js
 bin/rethink.js.map
 
 # compiled runtime
-example/.well-known/runtime/context-services.js
-example/.well-known/runtime/context-services.js.map
+example/.well-known/runtime/context-service.js
+example/.well-known/runtime/context-service.js.map
 example/.well-known/runtime/core.js
 example/.well-known/runtime/core.js.map
 example/.well-known/runtime/rethink.js
 example/.well-known/runtime/rethink.js.map
 
-# bundle files for guid
-example/guid.bundle.js
-example/guid.bundle.js.map
+# bundle files in example
+example/*.bundle.js
+example/*.bundle.js.map
+
+# misc
+sh.exe.stackdump
