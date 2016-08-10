@@ -147,7 +147,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let userGUID = runtime.graphConnector.generateGUID();
                 if (userGUID != null) {
                   parent.postMessage({to:'runtime:generateGUID', body:{"guid" : userGUID, }}, '*');
-                  console.log('## GUID generated!')
+                  console.log('## GUID generated! ')
 
 
                 }else {
@@ -160,9 +160,14 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log(runtime.graphConnector.addUserID(event.data.body.userID));
             } else if (event.data.to === 'graph:removeUserID') {
                 let userID = event.data.body.userID;
-                console.log('##Removing contact with userID: ' + userID);
-                runtime.graphConnector.removeUserID(userID);
-                console.log("UserID removed successfully");
+                console.log('##Removing userID: ' + userID);
+                let result = runtime.graphConnector.removeUserID(userID);
+                if(result){
+                    console.log("##UserID removed successfully");
+                }else {
+                    console.log("##UserID not found");
+                }
+
             } else if (event.data.to === 'graph:addContact') {
                 let guid = event.data.body.guid;
                 let fname = event.data.body.fname;

@@ -66,18 +66,29 @@ function messageHandler(event){
       console.log('User with no contacts \n GUID: ' + event.data.body.GUID )
     };
 
-  }else if(event.data.to === 'runtime:getAllContacts'){
+  }else if(event.data.to === 'runtime:getAllContacts') {
     let contactsList = event.data.body.result;
     console.log(contactsList);
-  }else if(event.data.to === 'runtime:getGroup'){
+  }else if(event.data.to === 'runtime:getGroup') {
     let tempGroup = event.data.body.result;
     console.log(tempGroup);
-  }else if(event.data.to === "runtime:getGroupNames"){
+  }else if(event.data.to === "runtime:getGroupNames") {
     let tempGroupNames = event.data.body.result;
     console.log("Group names of the user " + tempGroupNames)
-  }else if( event.data.to ==='runtime:generateGUID'){
+  }else if( event.data.to ==='runtime:generateGUID') {
     console.log('generateGUID: '+ event.data.body.guid)
-
+  }else if(event.data.to === 'runtime:addGroupName') {
+      if (event.data.body.result) {
+        console.log('Succesfuly added group name')
+      }else{
+        console.log('Group name was not added!')
+      }; 
+    }else if(event.data.to === 'runtime:removeGroupName') {
+      if (event.data.body.result) {
+        console.log('Succesfuly removed group name')
+    } else{
+        console.log('Group name was not removed!')
+    };
   } 
 
 }
@@ -121,6 +132,11 @@ function runtimeInstalled(runtime) {
   //runtime.requireHyperty(hypertyObserver).then(hypertyObserverDeployed).catch(function(reason) {
   //  errorMessage(reason);
   //});
+  });
+
+
+ $('#getContact').on('click', ()=>{
+      runtime.getContact('reThinkUser');
   });
 
   $('#useGUID').on('click', ()=>{
@@ -173,7 +189,7 @@ function runtimeInstalled(runtime) {
 
   });
    $('#getGroupNames').on('click', ()=>{
-     runtime.getGroupNames('Winterfell');
+     runtime.getGroupNames();
   
   });
   $('#removeGroupName').on('click', ()=>{
