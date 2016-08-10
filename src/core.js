@@ -112,7 +112,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
             }else if(event.data.to === 'graph:getGroupNames') {
 
-                console.log("##Inside core: getting all group names of owner")
+                console.log("##Inside core: getting all group names")
                 let result= runtime.graphConnector.getGroupNames();
                 if(result.length != 0){
                     for (var i = 0; i < result.length; i++) {
@@ -133,7 +133,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 if(success){
                     console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
                 } else {
-                    console.log("!!!!Error: Guid does not exist or groupName already exists");
+                    console.log("!!!!Error: Guid "+tmpGuid+"does not exist or groupName "+tmpGroup+" already exists");
                 }
                 parent.postMessage({to:'runtime:addGroupName', body:{"result" :success}}, '*');
             }else if(event.data.to === 'graph:removeGroupName') {
@@ -144,7 +144,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 if(success){
                     console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
                 } else {
-                    console.log("!!!!Error: Guid does not exist or groupName does not exist");
+                    console.log("!!!!Error: Guid "+tmpGuid+" does not exist or groupName "+tmpGroup+" does not exist");
                 }
                 parent.postMessage({to:'runtime:removeGroupName', body:{"result" :result}}, '*');
             } else if (event.data.to === 'core:loadStub') {
@@ -172,7 +172,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log('##Inside core: Removing userID: ' + userID);
                 let success = runtime.graphConnector.removeUserID(userID);
                 if(success){
-                    console.log("!!!!UserID removed successfully!!!!");
+                    console.log("!!!!Removed " + event.data.body.userID + "successfully!!!!");
                 } else {
                     console.log("!!!!Error: " + event.data.body.userID + " does not exist!!!!");
                 }
@@ -213,21 +213,19 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                    //parent.postMessage({to:'runtime:checkGUID', body:{"userDirectContacts" : usersDirectContact, "usersFoF" : usersFoF}}, '*');
                 } else {
                     console.log("##This user does not have any contacts stored!!");
-                    parent.postMessage({to:'runtime:checkGUID',body :{"check": false, 'GUID': guid}}, '*');
+                    parent.postMessage({to:'runtime:checkGUID', body :{"check": false, 'GUID': guid}}, '*');
 
                 }
             } else if (event.data.to === 'graph:removeContact') {
                 let guid = event.data.body.guid;
-
                 console.log("##Inside core: Deleting user with GUID: " + guid);
-                //asynchronous implementation ?? how
-
-                
-                let tmp = runtime.graphConnector.removeContact(guid);
-                console.log("##User with " + guid + " is been deleted");
-                console.log(tmp);
-
-
+                let success = runtime.graphConnector.removeContact(guid);
+                if(success){
+                    console.log("!!!!Contact with " + guid + " has been deleted successfully!!!!");
+                } else {
+                    console.log("!!!!Contact does not exist!!!!");
+                }
+                parent.postMessage({to:'runtime:removeContact', body :{"result": success}}, '*');
             } else if (event.data.to === 'graph:useGUID') {
                 let seed = event.data.body.seed;
                 console.log("##Inside core: generating keys using seed: " + seed);
