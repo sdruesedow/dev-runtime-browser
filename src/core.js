@@ -90,7 +90,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
                 console.log("##Inside core: removing location from the "+ tmpGuid);
                 let result=runtime.graphConnector.removeLocation(tmpGuid);
-                console.log('User found? - '+result);
+                if(result){
+                    console.log('Location successfully removed');
+                }else{
+                    console.log('Location has not been removed ')
+                }
                 //parent.postMessage({to:'runtime:removeLocation', body:{"result" :result}}, '*');
 
 
@@ -146,7 +150,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 } else {
                     console.log("!!!!Error: Guid does not exist or groupName does not exist");
                 }
-                parent.postMessage({to:'runtime:removeGroupName', body:{"result" :result}}, '*');
+                parent.postMessage({to:'runtime:removeGroupName', body:{"result" :success}}, '*');
             } else if (event.data.to === 'core:loadStub') {
                 runtime.loadStub(event.data.body.domain)
             } else if (event.data.to === 'graph:generateGUID') {
@@ -193,7 +197,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                         "\n GUID: " + user.guid);
                     parent.postMessage({to:'runtime:getContact', body:{"firstName" : user.firstName, "lastName" : user.lastName, "userExist" : true, "users": user}}, '*');
                 } else {
-                    console.log("Please enter the name");
+                    console.log("User not found! ");
                     parent.postMessage({to:'runtime:getContact', body:{"firstName" : "", "lastName" : "", "userExist" : false, "users" : user}}, '*');
                 }
             } else if (event.data.to === 'graph:checkGUID'){
@@ -220,9 +224,6 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
 
                 console.log("##Inside core: Deleting user with GUID: " + guid);
-                //asynchronous implementation ?? how
-
-                
                 let tmp = runtime.graphConnector.removeContact(guid);
                 console.log("##User with " + guid + " is been deleted");
                 console.log(tmp);
