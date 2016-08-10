@@ -159,7 +159,6 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log('##Could not generate GUID!')
                 }                
             } else if (event.data.to === 'graph:addUserID') {
-<<<<<<< HEAD
                 console.log('##Inside core: Adding userID: '+event.data.body.userID);
                 let success = runtime.graphConnector.addUserID(event.data.body.userID);
                 if(success) {
@@ -168,11 +167,6 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("!!!Error: " + event.data.body.userID + " already exists!!!");
                 }
                 parent.postMessage({to:'runtime:addUserID', body:{"result" : success}}, '*');
-=======
-                let userID = event.data.body.userID;
-                console.log('##try adding userID'+ userID);
-                console.log(runtime.graphConnector.addUserID(event.data.body.userID));
->>>>>>> origin/develop-GraphConnector-Test
             } else if (event.data.to === 'graph:removeUserID') {
                 let userID = event.data.body.userID;
                 console.log('##Inside core: Removing userID: ' + userID);
