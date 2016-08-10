@@ -114,6 +114,13 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
                 console.log("##Inside core: getting all group names of user")
                 let result= runtime.graphConnector.getGroupNames();
+                if(result.length != 0){
+                    for (var i = 0; i < result.length; i++) {
+                        console.log(result[i]);
+                    };
+                } else {
+                    console.log("!!!!Error: No group names Yet. Tip: Please add contacts and add group names!!!!")
+                }
                 parent.postMessage({to:'runtime:getGroupNames',body:{"result": result}},'*');
 
 
@@ -122,52 +129,54 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let tmpGroup= event.data.body.groupName;
                 // post message 
                 console.log("##Inside core: adding a groupName: " + tmpGroup +" to "+tmpGuid);
-                let result= runtime.graphConnector.addGroupName(tmpGuid,tmpGroup);
-                parent.postMessage({to:'runtime:addGroupName', body:{"result" :result}}, '*');
-
-
-
+                let success = runtime.graphConnector.addGroupName(tmpGuid,tmpGroup);
+                if(success){
+                    console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
+                } else {
+                    console.log("!!!!Error: Guid does not exist or groupName already exists");
+                }
+                parent.postMessage({to:'runtime:addGroupName', body:{"result" :success}}, '*');
             }else if(event.data.to === 'graph:removeGroupName') {
-
                 let tmpGuid= event.data.body.guid;
                 let tmpGroup= event.data.body.groupName;
-
-                console.log("##Inside core: Removing a groupName: " + tmpGroup +" from "+tmpGuid);
-                let result= runtime.graphConnector.removeGroupName(tmpGuid,tmpGroup);
+                console.log("##Inside core: Removing a groupName: " + tmpGroup +" to "+tmpGuid);
+                let success = runtime.graphConnector.removeGroupName(tmpGuid,tmpGroup);
+                if(success){
+                    console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
+                } else {
+                    console.log("!!!!Error: Guid does not exist or groupName does not exist");
+                }
                 parent.postMessage({to:'runtime:removeGroupName', body:{"result" :result}}, '*');
-
-
-
             } else if (event.data.to === 'core:loadStub') {
                 runtime.loadStub(event.data.body.domain)
             } else if (event.data.to === 'graph:generateGUID') {
-
                 console.log('##try generating GUID');
-
                 let userGUID = runtime.graphConnector.generateGUID();
                 if (userGUID != null) {
-                  parent.postMessage({to:'runtime:generateGUID', body:{"guid" : userGUID, }}, '*');
-                  console.log('## GUID generated! ')
-
-
+                    parent.postMessage({to:'runtime:generateGUID', body:{"guid" : userGUID, }}, '*');
+                    console.log('## GUID generated! ')
                 }else {
-
                     console.log('##Could not generate GUID!')
-                };
-                   
+                }                
             } else if (event.data.to === 'graph:addUserID') {
-                console.log('##try adding userID');
-                console.log(runtime.graphConnector.addUserID(event.data.body.userID));
+                console.log('##Inside core: Adding userID: '+event.data.body.userID);
+                let success = runtime.graphConnector.addUserID(event.data.body.userID);
+                if(success) {
+                    console.log("!!!!Added "+event.data.body.userID+ " successfully!!!!");
+                } else {
+                    console.log("!!!Error: " + event.data.body.userID + " already exists!!!");
+                }
+                parent.postMessage({to:'runtime:addUserID', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:removeUserID') {
                 let userID = event.data.body.userID;
-                console.log('##Removing userID: ' + userID);
-                let result = runtime.graphConnector.removeUserID(userID);
-                if(result){
-                    console.log("##UserID removed successfully");
-                }else {
-                    console.log("##UserID not found");
+                console.log('##Inside core: Removing userID: ' + userID);
+                let success = runtime.graphConnector.removeUserID(userID);
+                if(success){
+                    console.log("!!!!UserID removed successfully!!!!");
+                } else {
+                    console.log("!!!!Error: " + event.data.body.userID + " does not exist!!!!");
                 }
-
+                parent.postMessage({to:'runtime:removeUserID', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:addContact') {
                 let guid = event.data.body.guid;
                 let fname = event.data.body.fname;

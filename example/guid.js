@@ -74,20 +74,24 @@ function messageHandler(event){
     console.log(tempGroup);
   }else if(event.data.to === "runtime:getGroupNames") {
     let tempGroupNames = event.data.body.result;
-    console.log("Group names of the user " + tempGroupNames)
+    //console.log("Group names of the user " + tempGroupNames)
   }else if( event.data.to ==='runtime:generateGUID') {
     console.log('generateGUID: '+ event.data.body.guid)
   }else if(event.data.to === 'runtime:addGroupName') {
       if (event.data.body.result) {
-        console.log('Succesfuly added group name')
+        $('.testResult').html("<h5>Succesfuly added group name </h5>");
+        //console.log('Succesfuly added group name')
       }else{
-        console.log('Group name was not added!')
+        $('.testResult').html("<h5>!!!!Error: Guid does not exist or groupName already exists. <u>Tip:</u> please first add the contact with this GUID  </h5>");
+        //console.log('Group name was not added!')
       }; 
     }else if(event.data.to === 'runtime:removeGroupName') {
       if (event.data.body.result) {
-        console.log('Succesfuly removed group name')
+        $('.testResult').html("<h5>Succesfuly removed group name </h5>");
+        //console.log('Succesfuly removed group name')
     } else{
-        console.log('Group name was not removed!')
+      $('.testResult').html("<h5>!!!!Error: Guid does not exist or groupName does not exist <u>Tip:</u> please add the contact with this GUID or add the groupname to this contact</h5>");
+        //console.log('Group name was not removed!')
     };
   } 
 
@@ -207,11 +211,4 @@ function runtimeInstalled(runtime) {
      runtime.removeLocation('budc8fucd8cdsc98dc899dc');
   
   });
-
-  $('#getGroupNames').on('click', ()=>{
-     runtime.getGroupNames('Winterfell');
-  
-  });
-
-
 }
