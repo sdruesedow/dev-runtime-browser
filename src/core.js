@@ -90,7 +90,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
                 console.log("##Inside core: removing location from the "+ tmpGuid);
                 let result=runtime.graphConnector.removeLocation(tmpGuid);
-                console.log(result);
+                console.log('User found? - '+result);
                 //parent.postMessage({to:'runtime:removeLocation', body:{"result" :result}}, '*');
 
 
@@ -100,7 +100,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
                 console.log("##Inside core: setting location- "+tmpLoc +"  + for: "+ tmpGuid);
                 let result = runtime.graphConnector.setLocation(tmpGuid,tmpLoc);
-                console.log(result);
+                console.log('User found? - '+result);
 
                
             }else if (event.data.to === 'graph:getGroup'){  
@@ -112,7 +112,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
             }else if(event.data.to === 'graph:getGroupNames') {
 
-                console.log("##Inside core: getting all group names of user")
+                console.log("##Inside core: getting all group names of owner")
                 let result= runtime.graphConnector.getGroupNames();
                 if(result.length != 0){
                     for (var i = 0; i < result.length; i++) {
@@ -159,6 +159,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log('##Could not generate GUID!')
                 }                
             } else if (event.data.to === 'graph:addUserID') {
+<<<<<<< HEAD
                 console.log('##Inside core: Adding userID: '+event.data.body.userID);
                 let success = runtime.graphConnector.addUserID(event.data.body.userID);
                 if(success) {
@@ -167,6 +168,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("!!!Error: " + event.data.body.userID + " already exists!!!");
                 }
                 parent.postMessage({to:'runtime:addUserID', body:{"result" : success}}, '*');
+=======
+                let userID = event.data.body.userID;
+                console.log('##try adding userID'+ userID);
+                console.log(runtime.graphConnector.addUserID(event.data.body.userID));
+>>>>>>> origin/develop-GraphConnector-Test
             } else if (event.data.to === 'graph:removeUserID') {
                 let userID = event.data.body.userID;
                 console.log('##Inside core: Removing userID: ' + userID);
@@ -181,7 +187,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
                 let fname = event.data.body.fname;
                 let lname = event.data.body.lname;
-                console.log('##Inside Core: Adding a new contact with firstname: ' + fname);
+                console.log('##Inside Core: Adding a new contact with firstname: ' + fname+' '+lname+' GUDI: '+ guid);
                 runtime.graphConnector.addContact(guid, fname, lname);
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
