@@ -131,9 +131,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: adding a groupName: " + tmpGroup +" to "+tmpGuid);
                 let success = runtime.graphConnector.addGroupName(tmpGuid,tmpGroup);
                 if(success){
-                    console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
+                    console.log("!!!!Added \""+ tmpGroup +"\" successfully to \""+ tmpGuid +"\"!!!!");
                 } else {
-                    console.log("!!!!Error: Guid "+tmpGuid+"does not exist or groupName "+tmpGroup+" already exists");
+                    console.log("!!!!Error: Guid \""+ tmpGuid +"\" does not exist or groupName \""+ tmpGroup +"\" already exists");
                 }
                 parent.postMessage({to:'runtime:addGroupName', body:{"result" :success}}, '*');
             }else if(event.data.to === 'graph:removeGroupName') {
@@ -142,9 +142,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: Removing a groupName: " + tmpGroup +" to "+tmpGuid);
                 let success = runtime.graphConnector.removeGroupName(tmpGuid,tmpGroup);
                 if(success){
-                    console.log("!!!!Added "+tmpGroup+" successfully to "+tmpGuid+" !!!!");
+                    console.log("!!!!Added \""+ tmpGroup +"\" successfully to \""+ tmpGuid +"\"!!!!");
                 } else {
-                    console.log("!!!!Error: Guid "+tmpGuid+" does not exist or groupName "+tmpGroup+" does not exist");
+                    console.log("!!!!Error: Guid \""+ tmpGuid +"\" does not exist or groupName \""+ tmpGroup +"\" does not exist");
                 }
                 parent.postMessage({to:'runtime:removeGroupName', body:{"result" :result}}, '*');
             } else if (event.data.to === 'core:loadStub') {
@@ -159,12 +159,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log('##Could not generate GUID!')
                 }                
             } else if (event.data.to === 'graph:addUserID') {
-                console.log('##Inside core: Adding userID: '+event.data.body.userID);
+                console.log('##Inside core: Adding userID: '+ event.data.body.userID);
                 let success = runtime.graphConnector.addUserID(event.data.body.userID);
                 if(success) {
-                    console.log("!!!!Added "+event.data.body.userID+ " successfully!!!!");
+                    console.log("!!!!Added \""+ event.data.body.userID +"\" successfully!!!!");
                 } else {
-                    console.log("!!!Error: " + event.data.body.userID + " already exists!!!");
+                    console.log("!!!Error: \""+ event.data.body.userID +"\" already exists!!!");
                 }
                 parent.postMessage({to:'runtime:addUserID', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:removeUserID') {
@@ -172,9 +172,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log('##Inside core: Removing userID: ' + userID);
                 let success = runtime.graphConnector.removeUserID(userID);
                 if(success){
-                    console.log("!!!!Removed " + event.data.body.userID + "successfully!!!!");
+                    console.log("!!!!Removed \""+ event.data.body.userID +"\" successfully!!!!");
                 } else {
-                    console.log("!!!!Error: " + event.data.body.userID + " does not exist!!!!");
+                    console.log("!!!!Error: \""+ event.data.body.userID +"\" does not exist!!!!");
                 }
                 parent.postMessage({to:'runtime:removeUserID', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:addContact') {
@@ -221,9 +221,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: Deleting user with GUID: " + guid);
                 let success = runtime.graphConnector.removeContact(guid);
                 if(success){
-                    console.log("!!!!Contact with " + guid + " has been deleted successfully!!!!");
+                    console.log("!!!!Contact with \""+ guid +"\" has been deleted successfully!!!!");
                 } else {
-                    console.log("!!!!Contact does not exist!!!!");
+                    console.log("!!!!Contact with \""+ guid +"\" does not exist!!!!");
                 }
                 parent.postMessage({to:'runtime:removeContact', body :{"result": success}}, '*');
             } else if (event.data.to === 'graph:useGUID') {
