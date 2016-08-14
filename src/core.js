@@ -21,6 +21,7 @@
 * limitations under the License.
 **/
 import URI from 'urijs';
+import PoliciesGUI from './admin/PoliciesGUI';
 import RuntimeFactory from './RuntimeFactory';
 
 try{
@@ -37,7 +38,7 @@ function searchHyperty(runtime, descriptor){
     let hyperty = undefined;
     let index = 0;
     while(!hyperty && index<runtime.registry.hypertiesList.length){
-        if(runtime.registry.hypertiesList[index].descriptor === descriptor) 
+        if(runtime.registry.hypertiesList[index].descriptor === descriptor)
             hyperty = runtime.registry.hypertiesList[index]
 
         index++
@@ -64,6 +65,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
         eval.apply(window,[sourcePackage.sourceCode])
 
         let runtime = new Runtime(RuntimeFactory, window.location.host);
+        let gui = new PoliciesGUI(runtime.policyEngine);
+
         window.addEventListener('message', function(event){
             if(event.data.to==='core:loadHyperty'){
                 let descriptor = event.data.body.descriptor;
@@ -85,7 +88,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
 
         }, false);
         window.addEventListener('beforeunload', (e) => {
-            runtime.close() 
+            runtime.close()
         })
         parent.postMessage({to:'runtime:installed', body:{}}, '*');
     });
