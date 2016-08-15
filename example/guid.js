@@ -49,9 +49,17 @@ function documentReady() {
 
 function messageHandler(event){
     if(event.data.to == "runtime:getContact"){
-    let userFirstName = event.data.body.firstName;
-    let userLastName = event.data.body.lastName;
-    $('.testResult').append("<h3>The user's firstName is <u>"+ userFirstName+"<h3></u> and Last Name is <u>"+ userLastName+"</u></h3>");
+      if(event.data.body.found){
+        let userList = event.data.body.userList;
+        console.info(userList)
+        if(event.data.body.userList.length == 1){
+          //$('.testResult').append("<h3>The user's firstName is <u>"+ userList[0].firstName+"<h3></u> and Last Name is <u>"+ userList[0].lastName+"</u></h3>");
+        }else{
+          for (var i = 0; i < userList.length; i++) {
+            console.log(userList[i].firstName+' '+userList[i].lastName)
+          };
+        }
+      }
   }else if(event.data.to =='runtime:checkGUID'){
     let found =event.data.body.check; // true if there ist contacts list associated with the GUID,
     let FoF = event.data.body.usersFoF; 
@@ -141,6 +149,9 @@ function runtimeInstalled(runtime) {
 
  $('#getContact').on('click', ()=>{
       runtime.getContact('reThinkUser');
+  });
+ $('#getFewContacts').on('click', ()=>{
+      runtime.getContact('jo');
   });
 
   $('#useGUID').on('click', ()=>{

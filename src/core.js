@@ -146,7 +146,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: Removing a groupName: " + tmpGroup +" to "+tmpGuid);
                 let success = runtime.graphConnector.removeGroupName(tmpGuid,tmpGroup);
                 if(success){
-                    console.log("!!!!Added \""+ tmpGroup +"\" successfully to \""+ tmpGuid +"\"!!!!");
+                    console.log("!!!!Removed \""+ tmpGroup +"\" successfully from \""+ tmpGuid +"\"!!!!");
                 } else {
                     console.log("!!!!Error: Guid \""+ tmpGuid +"\" does not exist or groupName \""+ tmpGroup +"\" does not exist");
                 }
@@ -190,16 +190,16 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
                 console.log("##Inside core: finding user with username: " + username);
-                let user = runtime.graphConnector.getContact(username)[0];
-                if(user!=null){
-                    console.log("##User Found: \n Firtsname: " + user.firstName +
-                        "\n LastName " + user.lastName +
-                        "\n GUID: " + user.guid);
-                    parent.postMessage({to:'runtime:getContact', body:{"firstName" : user.firstName, "lastName" : user.lastName, "userExist" : true, "users": user}}, '*');
-                } else {
-                    console.log("User not found! ");
-                    parent.postMessage({to:'runtime:getContact', body:{"firstName" : "", "lastName" : "", "userExist" : false, "users" : user}}, '*');
-                }
+                let userList = runtime.graphConnector.getContact(username);
+                if(typeof userList != 'undefined'){
+                    if (userList.length == 0) {
+                        console.log('Contact not found');
+                        parent.postMessage({to:'runtime:getContact', body:{"found" : false}}, '*');
+                    } else if (userList.length >= 1) {
+                        console.log("Found matching users");
+                        parent.postMessage({to:'runtime:getContact', body:{"found" : true, "userList": userList}}, '*');
+                    }
+                } 
             } else if (event.data.to === 'graph:checkGUID'){
                 let guid = event.data.body.guid;
 
