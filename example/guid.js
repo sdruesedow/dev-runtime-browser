@@ -47,64 +47,96 @@ function documentReady() {
   }).then(runtimeInstalled).catch(errorMessage);
 }
 
-function messageHandler(event){
-    if(event.data.to == "runtime:getContact"){
-      if(event.data.body.found){
-        let userList = event.data.body.userList;
-        console.info(userList)
-        if(event.data.body.userList.length == 1){
-          //$('.testResult').append("<h3>The user's firstName is <u>"+ userList[0].firstName+"<h3></u> and Last Name is <u>"+ userList[0].lastName+"</u></h3>");
-        }else{
-          for (var i = 0; i < userList.length; i++) {
-            console.log(userList[i].firstName+' '+userList[i].lastName)
-          };
-        }
-      }
-  }else if(event.data.to =='runtime:checkGUID'){
-    let found =event.data.body.check; // true if there ist contacts list associated with the GUID,
-    let FoF = event.data.body.usersFoF; 
+function messageHandler(event) {
+  if (event.data.to == "runtime:getContact") {
+    let userList = event.data.body.userList;
+    $('.testResult')
+      .html('<h4>Matching Contacts are: </h4>');
 
+    for (var i = 0; i < userList.length; i++) {
+      $('.testResult')
+        .append('<h5><b>First Name: </b>' + userList[i]._firstName + ', <b>Last Name: </b>' + userList[i]._lastName + '</h5>');
+    }
+
+  } else if (event.data.to == 'runtime:checkGUID') {
+    let found = event.data.body.found; // true if there ist contacts list associated with the GUID,
+    let FoF = event.data.body.usersFoF;
     console.log('@@@ Recrevived Postmessage' + event.data.to);
+    let DirectContact = event.data.usersDirectContact;
 
-    let DirectContact =event.data.usersDirectContact;
-    if (event.data.check){  
-      console.log('FoF : '+ FoF);
-      console.log(' DirectContact : '+ DirectContact);
-    }else if(!event.data.check){
-      console.log('User with no contacts \n GUID: ' + event.data.body.GUID )
+    if (event.data.check) {
+      console.log('FoF : ' + FoF);
+      console.log(' DirectContact : ' + DirectContact);
+    } else if (!event.data.check) {
+      console.log('User with no contacts \n GUID: ' + event.data.body.GUID)
     };
 
-  }else if(event.data.to === 'runtime:getAllContacts') {
+  } else if (event.data.to === 'runtime:getAllContacts') {
     let contactsList = event.data.body.result;
-    console.log(contactsList);
-  }else if(event.data.to === 'runtime:getGroup') {
+
+    if (contactsList.length != 0) {
+      $('.testResult')
+        .html('<h4>List of all Contacts: </h4>');
+
+      for (var i = 0; i < contactsList.length; i++) {
+        $('.testResult')
+          .append('<h5><b>First Name: </b>' + contactsList[i]._firstName + ', <b>Last Name: </b>' + contactsList[i]._lastName + '</h5>');
+      }
+
+    }
+  } else if (event.data.to === 'runtime:getGroup') {
     let tempGroup = event.data.body.result;
-    console.log(tempGroup);
-  }else if(event.data.to === "runtime:getGroupNames") {
+    if (tempGroup.length != 0) {
+      $('.testResult')
+        .html("<h5>Group members are: </h5>");
+      for (var i = 0; i < tempGroup.length; i++) {
+        $('.testResult')
+          .append('<h5>member\'s name is :' + tempGroup[i]._firstName + ' </h5>');
+      };
+    }
+  } else if (event.data.to === "runtime:getGroupNames") {
     let tempGroupNames = event.data.body.result;
-    //console.log("Group names of the user " + tempGroupNames)
-  }else if( event.data.to ==='runtime:generateGUID') {
-    console.log('generateGUID: '+ event.data.body.guid)
-  }else if(event.data.to === 'runtime:addGroupName') {
-      if (event.data.body.result) {
-        $('.testResult').html("<h5>Succesfuly added group name </h5>");
-        //console.log('Succesfuly added group name')
-      }else{
-        $('.testResult').html("<h5>!!!!Error: Guid does not exist or groupName already exists. <u>Tip:</u> please first add the contact with this GUID  </h5>");
-        //console.log('Group name was not added!')
-      }; 
-    }else if(event.data.to === 'runtime:removeGroupName') {
-      if (event.data.body.result) {
-        $('.testResult').html("<h5>Succesfuly removed group name </h5>");
-        //console.log('Succesfuly removed group name')
-    } else{
-      $('.testResult').html("<h5>!!!!Error: Guid does not exist or groupName does not exist <u>Tip:</u> please add the contact with this GUID or add the groupname to this contact</h5>");
-        //console.log('Group name was not removed!')
+    console.info(tempGroupNames);
+
+    if (tempGroupNames.length != 0) {
+      $('.testResult')
+        .html("<h5>Group names are: </h5>");
+      for (var i = 0; i < tempGroupNames.length; i++) {
+        $('.testResult')
+          .append('<h5>' + tempGroupNames[i] + ' </h5>');
+      };
+    }
+
+  } else if (event.data.to === 'runtime:generateGUID') {
+    console.log('generateGUID: ' + event.data.body.guid)
+  } else if (event.data.to === 'runtime:queryGlobalRegistry') {
+    console.info('result is '+event.data.body.queriedContact);
+  } else if (event.data.to === 'runtime:addGroupName') {
+
+    if (event.data.body.result) {
+      $('.testResult')
+        .html("<h5>Succesfuly added group name </h5>");
+      //console.log('Succesfuly added group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: Guid does not exist or groupName already exists. <u>Tip:</u> please first add the contact with this GUID  </h5>");
+      //console.log('Group name was not added!')
     };
-  } 
 
+  } else if (event.data.to === 'runtime:removeGroupName') {
+
+    if (event.data.body.result) {
+      $('.testResult')
+        .html("<h5>Succesfuly removed group name </h5>");
+      //console.log('Succesfuly removed group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: Guid does not exist or groupName does not exist <u>Tip:</u> please add the contact with this GUID or add the groupname to this contact</h5>");
+      //console.log('Group name was not removed!')
+    };
+
+  }
 }
-
 
 function runtimeInstalled(runtime) {
   console.info(runtime);
@@ -146,80 +178,100 @@ function runtimeInstalled(runtime) {
   //});
   });
 
-
- $('#getContact').on('click', ()=>{
-      runtime.getContact('reThinkUser');
+$('#getContact')
+  .on('click', () => {
+    runtime.getContact('reThinkUser');
   });
- $('#getFewContacts').on('click', ()=>{
-      runtime.getContact('jo');
-  });
-
-  $('#useGUID').on('click', ()=>{
-      runtime.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp');
+$('#getFewContacts')
+  .on('click', () => {
+    runtime.getContact('jo');
   });
 
-  $('#generateGUID').on('click', ()=>{
-        runtime.generateGUID();
+$('#useGUID')
+  .on('click', () => {
+    runtime.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp');
+  });
+
+$('#generateGUID')
+  .on('click', () => {
+    runtime.generateGUID();
 
   });
 
-  $('#addUserID').on('click', ()=>{
+$('#addUserID')
+  .on('click', () => {
     runtime.addUserID('facebook.com/felix');
 
   });
 
-  $('#removeUserID').on('click', ()=>{
+$('#removeUserID')
+  .on('click', () => {
     runtime.removeUserID('facebook.com/felix');
 
   });
 
-  $('#addContact').on('click', ()=>{
+$('#addContact')
+  .on('click', () => {
     runtime.addContact('budc8fucd8cdsc98dc899dc', 'reThinkUser', 'Test');
+    runtime.addContact('budc8fucd8cdsc98dc899dctest', 'reThinkUserSecondContact', 'Test');
     runtime.addContact('123456', 'john', 'snow');
     runtime.addContact('1234', 'Joey', 'Landwunder');
 
   });
 
-  $('#removeContact').on('click', ()=>{
+$('#removeContact')
+  .on('click', () => {
     runtime.removeContact('budc8fucd8cdsc98dc899dc');
     runtime.removeContact('123456');
     runtime.removeContact('1234');
 
   });
 
-  $('#getAllContacts').on('click', ()=>{
-     runtime.getAllContacts(); 
+$('#getAllContacts')
+  .on('click', () => {
+    runtime.getAllContacts();
   });
 
-  $('#addGroupName').on('click', ()=>{
+$('#addGroupName')
+  .on('click', () => {
     runtime.addGroupName('123456', 'Winterfell');
     runtime.addGroupName('1234', 'Winterfell');
     runtime.addGroupName('budc8fucd8cdsc98dc899dc', 'Football');
 
   });
 
-  $('#getGroup').on('click', ()=>{
+$('#getGroup')
+  .on('click', () => {
     runtime.getGroup('Winterfell')
-      
+
 
   });
-   $('#getGroupNames').on('click', ()=>{
-     runtime.getGroupNames();
-  
-  });
-  $('#removeGroupName').on('click', ()=>{
-      runtime.removeGroupName('123456', 'Winterfell');
+$('#getGroupNames')
+  .on('click', () => {
+    runtime.getGroupNames();
 
   });
-
-  $('#setLocation').on('click', ()=>{
-    runtime.setLocation('budc8fucd8cdsc98dc899dc','Berlin');
-     
+$('#removeGroupName')
+  .on('click', () => {
+    runtime.removeGroupName('123456', 'Winterfell');
 
   });
 
-  $('#removeLocation').on('click', ()=>{
-     runtime.removeLocation('budc8fucd8cdsc98dc899dc');
-  
+$('#setLocation')
+  .on('click', () => {
+    runtime.setLocation('budc8fucd8cdsc98dc899dc', 'Berlin');
+
+
+  });
+
+$('#removeLocation')
+  .on('click', () => {
+    runtime.removeLocation('budc8fucd8cdsc98dc899dc');
+
+  });
+$('#queryGlobal')
+  .on('click', () => {
+    runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
+
   });
 }

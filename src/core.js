@@ -82,6 +82,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let contactsList = runtime.graphConnector.getAllContacts();
 
                 if(contactsList){
+                  if(contactsList.length !=0) {
+                    console.log("List of all contacts: ");
+                    for (var i = 0; i < contactsList.length; i++) {
+                        console.log('First Name: '+contactsList[i].firstName+' Last Name: '+contactsList[i].lastName);
+                    }
+                  }
                     parent.postMessage({to:'runtime:getAllContacts', body:{"result" :contactsList}}, '*');
                 }
 
@@ -92,8 +98,10 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let result=runtime.graphConnector.removeLocation(tmpGuid);
                 if(result){
                     console.log('Location successfully removed');
+                    parent.postMessage({to:'runtime:removeLocation', body:{"success" : result}},'*');
                 }else{
-                    console.log('Location has not been removed ')
+                    console.log('Location has not been removed ');
+                    parent.postMessage({to:'runtime:removeLocation', body:{"success" : result}},'*');
                 }
                 //parent.postMessage({to:'runtime:removeLocation', body:{"result" :result}}, '*');
 
@@ -105,14 +113,29 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: setting location- "+tmpLoc +"  + for: "+ tmpGuid);
                 let result = runtime.graphConnector.setLocation(tmpGuid,tmpLoc);
                 console.log('User found? - '+result);
-
+                if(result){
+                    console.log('Location \"'+tmpLoc+'\"" has been successfully set for the contact with GUID '+tmpGuid);
+                    parent.postMessage({to:'runtime:setLocation', body:{"success" : result}},'*');
+                } else {
+                    console.log('Location \"'+tmpLoc+'\"" has not been set for the contact with GUID '+tmpGuid);
+                    parent.postMessage({to:'runtime:setLocation', body:{"success" : result}},'*');
+                }
                
             }else if (event.data.to === 'graph:getGroup'){  
 
                 let tmpGroup = event.data.body.groupName;
                 console.log("##Inside core: getting members of the: "+ tmpGroup)
                 let result = runtime.graphConnector.getGroup(tmpGroup);
-                parent.postMessage({to:'runtime:getGroup',body:{"result": result}},'*');
+                if(result.length !=0) {
+                    console.log("!!!!Group members are: ");
+                    for (var i = 0; i < result.length; i++) {
+                        console.log(i+'. '+result[i].firstName);
+                    };
+                    parent.postMessage({to:'runtime:getGroup',body:{"found" : true, "result": result}},'*');
+                } else {
+                    console.log('!!!!No group members for groupname \"'+tmpGroup+'\"');
+                    parent.postMessage({to:'runtime:getGroup',body:{"found" : false, "result": result}},'*');
+                }
 
             }else if(event.data.to === 'graph:getGroupNames') {
 
@@ -122,12 +145,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     for (var i = 0; i < result.length; i++) {
                         console.log(result[i]);
                     };
+                    parent.postMessage({to:'runtime:getGroupNames',body:{"found" : true, "result": result}},'*');
                 } else {
                     console.log("!!!!Error: No group names Yet. Tip: Please add contacts and add group names!!!!")
+                    parent.postMessage({to:'runtime:getGroupNames',body:{"found" : false, "result": result}},'*');
                 }
-                parent.postMessage({to:'runtime:getGroupNames',body:{"result": result}},'*');
-
-
+                
             }else if(event.data.to === 'graph:addGroupName') {
                 let tmpGuid= event.data.body.guid;
                 let tmpGroup= event.data.body.groupName;
@@ -157,10 +180,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log('##try generating GUID');
                 let userGUID = runtime.graphConnector.generateGUID();
                 if (userGUID != null) {
-                    parent.postMessage({to:'runtime:generateGUID', body:{"guid" : userGUID, }}, '*');
+                    parent.postMessage({to:'runtime:generateGUID', body:{"success" : true, "guid" : userGUID, }}, '*');
                     console.log('## GUID generated! ')
                 }else {
                     console.log('##Could not generate GUID!')
+                    parent.postMessage({to:'runtime:generateGUID', body:{"success" : false, "guid" : userGUID, }}, '*');
                 }                
             } else if (event.data.to === 'graph:addUserID') {
                 console.log('##Inside core: Adding userID: '+ event.data.body.userID);
@@ -186,7 +210,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let fname = event.data.body.fname;
                 let lname = event.data.body.lname;
                 console.log('##Inside Core: Adding a new contact with firstname: ' + fname+' '+lname+' GUDI: '+ guid);
-                runtime.graphConnector.addContact(guid, fname, lname);
+                let success = runtime.graphConnector.addContact(guid, fname, lname);
+                parent.postMessage({to:'runtime:addContact', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
                 console.log("##Inside core: finding user with username: " + username);
@@ -197,6 +222,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                         parent.postMessage({to:'runtime:getContact', body:{"found" : false}}, '*');
                     } else if (userList.length >= 1) {
                         console.log("!!!!Found matching users: ");
+                        for (var i = 0; i < userList.length; i++) {
+                          console.log('First Name: '+userList[i].firstName+' Last Name: '+userList[i].lastName);
+                        }
                         parent.postMessage({to:'runtime:getContact', body:{"found" : true, "userList": userList}}, '*');
                     }
                 } 
@@ -212,12 +240,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
                         "\n LastName " + usersDirectContact.lastName +
                         "\n GUID " + usersDirectContact.guid);
-                parent.postMessage({to:'runtime:checkGUID', body :{"check": true, 'GUID': guid, 'usersFoF': usersFoF,'usersDirectContact':usersDirectContact}}, '*');
+                    parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'usersFoF': usersFoF,'usersDirectContact':usersDirectContact}}, '*');
                     // Returns 2 Array of conected friends
                    //parent.postMessage({to:'runtime:checkGUID', body:{"userDirectContacts" : usersDirectContact, "usersFoF" : usersFoF}}, '*');
                 } else {
                     console.log("##This user does not have any contacts stored!!");
-                    parent.postMessage({to:'runtime:checkGUID', body :{"check": false, 'GUID': guid}}, '*');
+                    parent.postMessage({to:'runtime:checkGUID', body :{"found": false, 'GUID': guid}}, '*');
 
                 }
             } else if (event.data.to === 'graph:removeContact') {
@@ -234,11 +262,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:useGUID') {
                 let seed = event.data.body.seed;
                 console.log("##Inside core: generating keys using seed: " + seed);
-                runtime.graphConnector.useGUID(seed).then(function(global_registry_record){
-                    console.log("Returned value is " + global_registry_record);
-                }).catch(function(err){
-                    console.log("Caught an error "+err);
-                });
+                let globalRegistryRecord = runtime.graphConnector.useGUID(seed);
+                parent.postMessage({to:'runtime:useGUID', body :{"record": globalRegistryRecord}}, '*');
                 console.log("##Seed is created");
             } else if (event.data.to === 'graph:sendGlobalRegistryRecord') {
                 let jwt = event.data.body.jwt;
@@ -247,7 +272,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:queryGlobalRegistry') {
                 let guid = event.data.body.guid;
                 console.log("##Inside core: Querying with GUID: " + guid);
-                runtime.graphConnector.queryGlobalRegistry(guid);
+                let queriedContact = runtime.graphConnector.queryGlobalRegistry(guid);
+                parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": queriedContact}}, '*');
             } else if (event.data.to === 'graph:calculateBloomFilter1Hop') {
                 console.log("##Inside bloom filter");
                 console.log("##Calculating Bloom filter : " + runtime.graphConnector.calculateBloomFilter1Hop());
@@ -272,6 +298,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                      "\nFirst Name is : " + result[0].firstName +
                      "\nLast Name is : " + result[0].lastName +
                      "\nPrivacy is : " + result[0].privateContact );
+                if(result.length !=0){
+                    parent.postMessage({to:'runtime:editContact', body :{"success": true, "contact": result}}, '*');
+                } else {
+                    parent.postMessage({to:'runtime:editContact', body :{"success": false, "contact": result}}, '*');
+                }
             }
 
         }, false);
