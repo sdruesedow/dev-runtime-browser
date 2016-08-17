@@ -193,10 +193,10 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let userList = runtime.graphConnector.getContact(username);
                 if(typeof userList != 'undefined'){
                     if (userList.length == 0) {
-                        console.log('Contact not found');
+                        console.log('!!!!Contact with name \"'+username +'\" not found!!!!');
                         parent.postMessage({to:'runtime:getContact', body:{"found" : false}}, '*');
                     } else if (userList.length >= 1) {
-                        console.log("Found matching users");
+                        console.log("!!!!Found matching users: ");
                         parent.postMessage({to:'runtime:getContact', body:{"found" : true, "userList": userList}}, '*');
                     }
                 } 
