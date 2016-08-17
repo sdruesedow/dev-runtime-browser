@@ -68,7 +68,7 @@
     "mutationobserver-shim": "^0.3.1",
     "object.observe": "^0.2.6",
     "runtime-core": "git+https://github.com/reTHINK-project/dev-runtime-core.git#develop",
-    "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#919dea52293191b7874b14957599ec48efb2f501",
+    "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#develop",
     "tv4": "^1.2.7",
     "urijs": "^1.17.1"
   }
