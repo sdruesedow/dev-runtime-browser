@@ -108,9 +108,15 @@ function messageHandler(event) {
     }
 
   } else if (event.data.to === 'runtime:generateGUID') {
-    console.log('generateGUID: ' + event.data.body.guid)
+    console.log('generateGUID: ' + event.data.body.guid);
   } else if (event.data.to === 'runtime:queryGlobalRegistry') {
-    console.info('result is '+event.data.body.queriedContact);
+    console.info(event.data.body.queriedContact);
+  } else if (event.data.to === 'runtime:useGUID') {
+    let record = event.data.body.record;
+    console.info(record);
+  } else if (event.data.to === 'runtime:sendGlobalRegistryRecord') {
+    let record = event.data.body.record;
+    console.info(result);
   } else if (event.data.to === 'runtime:getOwner') {
     $('.testResult')
         .html("<h5>Owner's first and last name is : " + event.data.body.owner._firstName + " and " + event.data.body.owner._lastName + " respectively.</h5>");
@@ -284,7 +290,14 @@ $('#getOwner')
   });
 $('#setOwner')
   .on('click', () => {
-    runtime.setOwnerName('OwnerFirstNameJohn', 'OwnerLastNameKennedy');
+    runtime.setOwnerName('OwnerFirstNameJohn', 'OwnerLastNameKennedy').then(function (result){
+      console.log(" result from promise is " + result);
+    });
 
   });
+$('#sendGlobalRegistryRecord')
+  .on('click', () => {
+    runtime.sendGlobalRegistryRecord("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ");
+
+});
 }

@@ -262,7 +262,6 @@ let runtimeProxy = {
             };
             window.addEventListener('message', loaded);
             iframe.contentWindow.postMessage({to:'graph:sendGlobalRegistryRecord', body:{"jwt": jwt}}, '*')
-            resolve("success");
         });
     },
 
@@ -353,6 +352,7 @@ let runtimeProxy = {
                 }
             };
             window.addEventListener('message', loaded);
+            resolve(firstName);
             iframe.contentWindow.postMessage({to:'graph:setOwnerName', body:{'firstName': firstName, 'lastName': lastName}}, '*')
         });
     }

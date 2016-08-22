@@ -263,17 +263,33 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:useGUID') {
                 let seed = event.data.body.seed;
                 console.log("##Inside core: generating keys using seed: " + seed);
-                let globalRegistryRecord = runtime.graphConnector.useGUID(seed);
+                let globalRegistryRecord = runtime.graphConnector.useGUID(seed).then(function (response){
+                    return response;
+                }).catch (function (error){
+                    return error;
+                });
+                console.info(globalRegistryRecord);
                 parent.postMessage({to:'runtime:useGUID', body :{"record": globalRegistryRecord}}, '*');
                 console.log("##Seed is created");
             } else if (event.data.to === 'graph:sendGlobalRegistryRecord') {
                 let jwt = event.data.body.jwt;
                 console.log("##Inside core: Sending JWT with value: " + jwt);
-                console.log("##Global Registry record sent, this function returns promise object : " + runtime.graphConnector.sendGlobalRegistryRecord(jwt));
+                let globalregistry = runtime.graphConnector.sendGlobalRegistryRecord(jwt).then(function (response) {
+                    return response;
+                }).catch (function (error){
+                    return error;
+                });
+                console.log('global resgistry is ');
+                console.info(globalregistry);
+                parent.postMessage({to:'runtime:sendGlobalRegistryRecord', body :{"record": globalregistry}}, '*');
             } else if (event.data.to === 'graph:queryGlobalRegistry') {
                 let guid = event.data.body.guid;
                 console.log("##Inside core: Querying with GUID: " + guid);
-                let queriedContact = runtime.graphConnector.queryGlobalRegistry(guid);
+                let queriedContact = runtime.graphConnector.queryGlobalRegistry(guid).then(function (queriedContact){
+                    return queriedContact;
+                }).catch (function (error){
+                    return error;
+                });
                 parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": queriedContact}}, '*');
             } else if (event.data.to === 'graph:calculateBloomFilter1Hop') {
                 console.log("##Inside bloom filter");
