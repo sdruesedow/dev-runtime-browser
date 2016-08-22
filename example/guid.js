@@ -111,6 +111,9 @@ function messageHandler(event) {
     console.log('generateGUID: ' + event.data.body.guid)
   } else if (event.data.to === 'runtime:queryGlobalRegistry') {
     console.info('result is '+event.data.body.queriedContact);
+  } else if (event.data.to === 'runtime:getOwner') {
+    $('.testResult')
+        .html("<h5>Owner's first and last name is : " + event.data.body.owner._firstName + " and " + event.data.body.owner._lastName + " respectively.</h5>");
   } else if (event.data.to === 'runtime:addGroupName') {
 
     if (event.data.body.result) {
@@ -272,6 +275,16 @@ $('#removeLocation')
 $('#queryGlobal')
   .on('click', () => {
     runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
+
+  });
+$('#getOwner')
+  .on('click', () => {
+    runtime.getOwner();
+
+  });
+$('#setOwner')
+  .on('click', () => {
+    runtime.setOwnerName('OwnerFirstNameJohn', 'OwnerLastNameKennedy');
 
   });
 }
