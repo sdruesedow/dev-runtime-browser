@@ -81,14 +81,15 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: returning all contacts");
                 let contactsList = runtime.graphConnector.getAllContacts();
 
-                if(contactsList){
                   if(contactsList.length !=0) {
                     console.log("List of all contacts: ");
                     for (var i = 0; i < contactsList.length; i++) {
                         console.log('First Name: '+contactsList[i].firstName+' Last Name: '+contactsList[i].lastName);
                     }
-                  }
-                    parent.postMessage({to:'runtime:getAllContacts', body:{"result" :contactsList}}, '*');
+                    parent.postMessage({to:'runtime:getAllContacts', body:{"success" : true, "result" :contactsList}}, '*');
+                } else {
+                    console.log("!!!! Error : No contacts in the contact list, Please add contacts");
+                    parent.postMessage({to:'runtime:getAllContacts', body:{"success" : false, "result" :contactsList}}, '*');
                 }
 
             }else if(event.data.to === 'graph:removeLocation'){
@@ -282,6 +283,34 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
                 let bloomFilterOwner = runtime.graphConnector.contactsBloomFilter1Hop;
                 console.log("##setting the bloom filter for a contact : " + runtime.graphConnector.setBloomFilter1HopContact(guid, bloomFilterOwner));
+            } else if (event.data.to === 'graph:getOwner') {
+                console.log("##Inside core: get Owner Details");
+                let owner = runtime.graphConnector.getOwner();
+                if(owner == null){
+                    parent.postMessage({to:'runtime:getOwner', body :{"success": false, "owner": owner}}, '*');
+                } else {
+                    console.log("!!!!Owner is: " + 
+                        "\nFirstname " + owner.firstName +
+                        "\nLast Name " + owner.lastName + 
+                        "\nGUID "+ owner.guid +
+                        "\nNo of groups " + owner.groups.length +
+                        "\nResidence Location " + owner.residenceLocation +
+                        "\nBloom filter " + owner.contactsBloomFilter1Hop +
+                        "\nLast Calculations bloom filter " + owner.lastCalculationBloomFilter1Hop);
+                    parent.postMessage({to:'runtime:getOwner', body :{"success": true, "owner": owner}}, '*');
+                }
+            } else if (event.data.to === 'graph:setOwnerName') {
+                console.log("##Inside core: set Owner Details");
+                let ownerFirstname = event.data.body.firstName;
+                let ownerLastName = event.data.body.lastName;
+                let success = runtime.graphConnector.setOwnerName(ownerFirstname, ownerLastName);
+                if(success){
+                    console.log('!!!! Successfully set owners firstName '+ ownerFirstname + ' and last name as ' + ownerLastName);
+                    parent.postMessage({to:'runtime:setOwner', body :{"success": success}}, '*');
+                } else {
+                    console.log('!!!! Error: Setting of owners firstName as '+ ownerFirstname + ' and last name as ' + ownerLastName +' was unsuccessful');
+                    parent.postMessage({to:'runtime:setOwner', body :{"success": success}}, '*');
+                }
             } else if (event.data.to === 'graph:signGlobalRegistryRecord') {
                 console.log("##Inside signing");
                 console.log("##Signing and the returned JWT is : " + runtime.graphConnector.signGlobalRegistryRecord());
