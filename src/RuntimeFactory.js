@@ -44,6 +44,10 @@ const RuntimeFactory = Object.create({
             this.catalogue = development?new RuntimeCatalogueLocal(this):new RuntimeCatalogue(this)
         
         return this.catalogue
+    }, 
+
+    atob(b64) {
+      return atob(b64);
     }
 })
 

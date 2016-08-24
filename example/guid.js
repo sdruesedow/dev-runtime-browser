@@ -116,7 +116,7 @@ function messageHandler(event) {
     console.info(record);
   } else if (event.data.to === 'runtime:sendGlobalRegistryRecord') {
     let record = event.data.body.record;
-    console.info(result);
+    console.info(record);
   } else if (event.data.to === 'runtime:getOwner') {
     $('.testResult')
         .html("<h5>Owner's first and last name is : " + event.data.body.owner._firstName + " and " + event.data.body.owner._lastName + " respectively.</h5>");
