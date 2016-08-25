@@ -122,8 +122,11 @@ gulp.task('bundle:core', function(){
 gulp.task('bundle:context', function(){
     return bundle('./src/ContextServiceProvider.js', 'context-service', 'bin')
 });
+gulp.task('bundle:policies-gui', function () {
+  return bundle('./src/admin/PoliciesGUI.js', 'policies-gui', 'bin');
+});
 
-gulp.task('bundle', ['bundle:rethink', 'bundle:core', 'bundle:context']);
+gulp.task('bundle', ['bundle:rethink', 'bundle:core', 'bundle:context', 'bundle:policies-gui']);
 
 /**
  * Bumping version number and tagging the repository with it.

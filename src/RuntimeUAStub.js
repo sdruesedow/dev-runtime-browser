@@ -43,7 +43,7 @@ let runtimeAdapter = {
                     resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
                 }
             };
-            window.addEventListener('message', loaded);                     
+            window.addEventListener('message', loaded);
             iframe.contentWindow.postMessage({to:'core:loadHyperty', body:{descriptor: hypertyDescriptor}}, '*');
         });
     },
@@ -60,20 +60,30 @@ let runtimeAdapter = {
                     resolve(resolve(e.data.body));
                 }
             };
-            window.addEventListener('message', loaded);                     
+            window.addEventListener('message', loaded);
             iframe.contentWindow.postMessage({to:'core:close', body:{}}, '*')
         })
     },
 };
 
 let GuiManager = function(){
-    window.addEventListener('message', (e)=>{
-        if(!e.data.to.endsWith('gui-manager'))
-            return
+  window.addEventListener('message', (e) => {
+    if(e.data.to === 'runtime:gui-manager') {
 
-        iframe.style.display = (e.data.body.method === 'hideAdminPage')?'none':'block'
-    })
+      if (e.data.body.method === 'showAdminPage') {
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+      } else {
+        if (e.data.body.method === 'hideAdminPage') {
+          iframe.style.width = '40px';
+          iframe.style.height = '40px';
+        }
+      }
+
+    }
+  });
 }
+
 let RethinkBrowser = {
     install: function({domain, runtimeURL, development}={}){
         return new Promise((resolve, reject)=>{
@@ -93,7 +103,7 @@ let RethinkBrowser = {
 
     _getRuntime (runtimeURL, domain, development) {
         if(!!development){
-            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime' 
+            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime'
             domain = domain || new URI(runtimeURL).host()
         }else{
             runtimeURL = runtimeURL || `https://catalogue.${domain}/.well-known/runtime/default`
