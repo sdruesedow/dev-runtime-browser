@@ -52,7 +52,6 @@ let runtimeAdapter = {
         iframe.contentWindow.postMessage({to:'core:loadStub', body:{"domain": domain}}, '*')
     },
 
-<<<<<<< HEAD
 	generateGUID: ()=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -356,9 +355,8 @@ let runtimeAdapter = {
             resolve(firstName);
             iframe.contentWindow.postMessage({to:'graph:setOwnerName', body:{'firstName': firstName, 'lastName': lastName}}, '*')
         });
-    }
+    },
 
-=======
     close: ()=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -370,8 +368,8 @@ let runtimeAdapter = {
             window.addEventListener('message', loaded);
             iframe.contentWindow.postMessage({to:'core:close', body:{}}, '*')
         })
-    },
->>>>>>> refs/remotes/origin/master
+    }
+
 };
 
 let GuiManager = function(){

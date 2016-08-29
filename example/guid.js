@@ -280,7 +280,7 @@ $('#removeLocation')
   });
 $('#queryGlobal')
   .on('click', () => {
-    runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
+    runtime.queryGlobalRegistry('bXBhhJm-o40WBIcXQQECH0-_MqNux6p3ANxt7lFA-Mg');
 
   });
 $('#getOwner')
