@@ -34,7 +34,7 @@ let buildMsg = (hypertyComponent, msg) => {
        }
 };
 
-let runtimeProxy = {
+let runtimeAdapter = {
     requireHyperty: (hypertyDescriptor)=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -52,6 +52,7 @@ let runtimeProxy = {
         iframe.contentWindow.postMessage({to:'core:loadStub', body:{"domain": domain}}, '*')
     },
 
+<<<<<<< HEAD
 	generateGUID: ()=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -357,27 +358,60 @@ let runtimeProxy = {
         });
     }
 
+=======
+    close: ()=>{
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:runtimeClosed'){
+                    window.removeEventListener('message', loaded);
+                    resolve(resolve(e.data.body));
+                }
+            };
+            window.addEventListener('message', loaded);
+            iframe.contentWindow.postMessage({to:'core:close', body:{}}, '*')
+        })
+    },
+>>>>>>> refs/remotes/origin/master
 };
+
+let GuiManager = function(){
+  window.addEventListener('message', (e) => {
+    if(e.data.to === 'runtime:gui-manager') {
+
+      if (e.data.body.method === 'showAdminPage') {
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+      } else {
+        if (e.data.body.method === 'hideAdminPage') {
+          iframe.style.width = '40px';
+          iframe.style.height = '40px';
+        }
+      }
+
+    }
+  });
+}
 
 let RethinkBrowser = {
     install: function({domain, runtimeURL, development}={}){
         return new Promise((resolve, reject)=>{
-            let runtime = this.getRuntime(runtimeURL, domain, development)
+            let runtime = this._getRuntime(runtimeURL, domain, development)
             iframe = createIframe(`https://${runtime.domain}/.well-known/runtime/index.html?runtime=${runtime.url}&development=${development}`);
             let installed = (e)=>{
                 if(e.data.to === 'runtime:installed'){
                     window.removeEventListener('message', installed);
-                    resolve(runtimeProxy);
+                    resolve(runtimeAdapter);
                 }
             };
             window.addEventListener('message', installed);
             app.create(iframe);
+            GuiManager()
         });
     },
 
-    getRuntime (runtimeURL, domain, development) {
+    _getRuntime (runtimeURL, domain, development) {
         if(!!development){
-            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime' //`https://${domain}/resources/descriptors/Runtimes.json`
+            runtimeURL = runtimeURL || 'hyperty-catalogue://catalogue.' + domain + '/.well-known/runtime/Runtime'
             domain = domain || new URI(runtimeURL).host()
         }else{
             runtimeURL = runtimeURL || `https://catalogue.${domain}/.well-known/runtime/default`

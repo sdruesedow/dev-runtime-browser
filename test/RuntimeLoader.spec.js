@@ -7,7 +7,7 @@ describe('Service framework', function(){
 
     describe('Require Hyperty', function(){
         xit('should returns required hyperty', function(done){
-            let runtime = rethink.install('domain')
+            let runtime = rethink.install({domain:'hybroker.rethink.ptinovacao.pt', development: true})
                 .then(function(runtime){
                     let hyperty = runtime.requireHyperty('aaa')
 

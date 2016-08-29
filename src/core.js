@@ -21,20 +21,37 @@
  * limitations under the License.
  **/
 import URI from 'urijs';
+import PoliciesGUI from './admin/PoliciesGUI';
 import RuntimeFactory from './RuntimeFactory';
 
+<<<<<<< HEAD
 function returnHyperty(source, hyperty) {
     source.postMessage({
         to: 'runtime:loadedHyperty',
         body: hyperty
     }, '*')
+=======
+try{
+    window.cordova = parent.cordova !== undefined
+    if(window.cordova)
+        window.open = function(url){ return parent.cordova.InAppBrowser.open(url, '_blank', 'location=no,toolbar=no')};
+}catch(err){ console.log('cordova not supported') }
+
+function returnHyperty(source, hyperty){
+    source.postMessage({to: 'runtime:loadedHyperty', body: hyperty}, '*')
+>>>>>>> refs/remotes/origin/master
 }
 
 function searchHyperty(runtime, descriptor) {
     let hyperty = undefined;
     let index = 0;
+<<<<<<< HEAD
     while (!!hyperty) {
         if (runtime.registry.hypertiesList[index] === descriptor)
+=======
+    while(!hyperty && index<runtime.registry.hypertiesList.length){
+        if(runtime.registry.hypertiesList[index].descriptor === descriptor)
+>>>>>>> refs/remotes/origin/master
             hyperty = runtime.registry.hypertiesList[index]
 
         index++
@@ -45,7 +62,7 @@ function searchHyperty(runtime, descriptor) {
 
 let parameters = new URI(window.location).search(true)
 let runtimeURL = parameters.runtime
-let development = !!parameters.development
+let development = parameters.development === "true"
 let catalogue = RuntimeFactory.createRuntimeCatalogue(development)
 
 catalogue.getRuntimeDescriptor(runtimeURL)
@@ -61,8 +78,15 @@ catalogue.getRuntimeDescriptor(runtimeURL)
         eval.apply(window, [sourcePackage.sourceCode])
 
         let runtime = new Runtime(RuntimeFactory, window.location.host);
+<<<<<<< HEAD
         window.addEventListener('message', function(event) {
             if (event.data.to === 'core:loadHyperty') {
+=======
+        let gui = new PoliciesGUI(runtime.policyEngine);
+
+        window.addEventListener('message', function(event){
+            if(event.data.to==='core:loadHyperty'){
+>>>>>>> refs/remotes/origin/master
                 let descriptor = event.data.body.descriptor;
                 let hyperty = searchHyperty(runtime, descriptor);
 
@@ -177,6 +201,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 parent.postMessage({to:'runtime:removeGroupName', body:{"result" :success}}, '*');
             } else if (event.data.to === 'core:loadStub') {
                 runtime.loadStub(event.data.body.domain)
+<<<<<<< HEAD
             } else if (event.data.to === 'graph:generateGUID') {
                 console.log('##try generating GUID');
                 let userGUID = runtime.graphConnector.generateGUID();
@@ -356,3 +381,17 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             body: {}
         }, '*');
     });
+=======
+            }else if(event.data.to==='core:close'){
+                runtime.close()
+                    .then(event.source.postMessage({to: 'runtime:runtimeClosed', body: true}, '*'))
+                    .catch(event.source.postMessage({to: 'runtime:runtimeClosed', body: false}, '*'))
+            }
+
+        }, false);
+        window.addEventListener('beforeunload', (e) => {
+            runtime.close()
+        })
+        parent.postMessage({to:'runtime:installed', body:{}}, '*');
+    });
+>>>>>>> refs/remotes/origin/master

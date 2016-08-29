@@ -44,7 +44,11 @@ const RuntimeFactory = Object.create({
             this.catalogue = development?new RuntimeCatalogueLocal(this):new RuntimeCatalogue(this)
         
         return this.catalogue
+<<<<<<< HEAD
     }, 
+=======
+    },
+>>>>>>> refs/remotes/origin/master
 
     atob(b64) {
       return atob(b64);

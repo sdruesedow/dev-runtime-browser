@@ -1,3 +1,5 @@
+.tern-port
+tags
 # Dependencies folders
 node_modules
 vendor
