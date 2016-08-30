@@ -335,7 +335,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 }
             } else if (event.data.to === 'graph:signGlobalRegistryRecord') {
                 console.log("##Inside signing");
-                console.log("##Signing and the returned JWT is : " + runtime.graphConnector.signGlobalRegistryRecord());
+                let jwt = runtime.graphConnector.signGlobalRegistryRecord();
+                console.log("##Signing and the returned JWT is : " + jwt);
+                parent.postMessage({to:'runtime:signGlobalRegistryRecord', body :{"jwt" : jwt }}, '*');
             } else if (event.data.to === 'graph:editContact') {
                 console.log("##Inside Core: Edit Contact function to change guid, fname, lname and privacy");
                 let guidOld = event.data.body.guidOld;
