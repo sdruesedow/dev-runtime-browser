@@ -117,6 +117,32 @@ function messageHandler(event) {
   } else if (event.data.to === 'runtime:sendGlobalRegistryRecord') {
     let record = event.data.body.record;
     console.info(record);
+  } else if (event.data.to === 'runtime:setContactUserIDs') {
+    let success = event.data.body.result;
+    if (success) {
+      $('.testResult')
+        .html("<h5>Succesfuly added user ID</h5>");
+      //console.log('Succesfuly added group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: UserID already exist or the contact with GUID does not exist  </h5>");
+      //console.log('Group name was not added!')
+    };
+  } else if (event.data.to === 'runtime:getContactUserIDs') {
+    let success = event.data.body.result;
+    if (success != 'Contact Does not exist') {
+      $('.testResult')
+        .html("<h5>User IDs are : </h5>");
+      for (var i = 0; i < success.length; i++) {
+        $('.testResult')
+          .append("<h5><b>"+ success[i] +" </b> </h5>");
+      }
+      //console.log('Succesfuly added group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: Contact with this guid doesnot exist </h5>");
+      //console.log('Group name was not added!')
+    };
   } else if (event.data.to === 'runtime:getOwner') {
     $('.testResult')
         .html("<h5>Owner's first and last name is : " + event.data.body.owner._firstName + " and " + event.data.body.owner._lastName + " respectively.</h5>");
@@ -288,12 +314,19 @@ $('#getOwner')
     runtime.getOwner();
 
   });
+$('#setGetContactUserID')
+    .on('click', () => {
+      runtime.addContact('budc8fucd8cdsc98dc899dcadduserIDtest', 'contactUserIDTest', 'Test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'facebook.com/contact');
+      runtime.getContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest');
+  });
 $('#setOwner')
   .on('click', () => {
     runtime.setOwnerName('OwnerFirstNameJohn', 'OwnerLastNameKennedy').then(function (result){
       console.log(" result from promise is " + result);
     });
-
   });
 $('#sendGlobalRegistryRecord')
   .on('click', () => {

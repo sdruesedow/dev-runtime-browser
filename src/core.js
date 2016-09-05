@@ -80,7 +80,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     runtime.loadHyperty(descriptor)
                         .then(returnHyperty.bind(null, event.source));
                 }
-            
+
 
             }else if(event.data.to === 'graph:getAllContacts'){
 
@@ -127,8 +127,8 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log('Location \"'+tmpLoc+'\"" has not been set for the contact with GUID '+tmpGuid);
                     parent.postMessage({to:'runtime:setLocation', body:{"success" : result}},'*');
                 }
-               
-            }else if (event.data.to === 'graph:getGroup'){  
+
+            }else if (event.data.to === 'graph:getGroup'){
 
                 let tmpGroup = event.data.body.groupName;
                 console.log("##Inside core: getting members of the: "+ tmpGroup)
@@ -157,11 +157,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("!!!!Error: No group names Yet. Tip: Please add contacts and add group names!!!!")
                     parent.postMessage({to:'runtime:getGroupNames',body:{"found" : false, "result": result}},'*');
                 }
-                
+
             }else if(event.data.to === 'graph:addGroupName') {
                 let tmpGuid= event.data.body.guid;
                 let tmpGroup= event.data.body.groupName;
-                // post message 
+                // post message
                 console.log("##Inside core: adding a groupName: " + tmpGroup +" to "+tmpGuid);
                 let success = runtime.graphConnector.addGroupName(tmpGuid,tmpGroup);
                 if(success){
@@ -192,7 +192,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 }else {
                     console.log('##Could not generate GUID!')
                     parent.postMessage({to:'runtime:generateGUID', body:{"success" : false, "guid" : userGUID, }}, '*');
-                }                
+                }
             } else if (event.data.to === 'graph:addUserID') {
                 console.log('##Inside core: Adding userID: '+ event.data.body.userID);
                 let success = runtime.graphConnector.addUserID(event.data.body.userID);
@@ -212,12 +212,39 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     console.log("!!!!Error: \""+ event.data.body.userID +"\" does not exist!!!!");
                 }
                 parent.postMessage({to:'runtime:removeUserID', body:{"result" : success}}, '*');
+            }  else if (event.data.to === 'graph:setContactUserIDs') {
+                let userID = event.data.body.userID;
+                let guid = event.data.body.guid;
+                console.log('##Inside core: Adding userID: \"'+ userID +'\" for the contact with guid: \"' + guid +'\"');
+                let success = runtime.graphConnector.setContactUserIDs(guid, userID);
+                if(success){
+                    console.log("!!!!Added userID: \""+ userID +"\" for the contact with guid: \""+ guid +"\" successfully!!!!");
+                } else {
+                    console.log("!!!!Error: \""+ userID +"\" already exist or contact with guid: "+guid+" does not exist!!!!");
+                }
+                parent.postMessage({to:'runtime:setContactUserIDs', body:{"result" : success}}, '*');
+            }  else if (event.data.to === 'graph:getContactUserIDs') {
+                let guid = event.data.body.guid;
+                console.log('##Inside core: Getting all the userIDS for the contact with guid: \"' + guid +'\"');
+                let success = runtime.graphConnector.getContactUserIDs(guid);
+                if(success !== false){
+                    console.log("!!!!Found userIDs for the contact with guid: \""+ guid +"\" successfully!!!!");
+                    console.info(success);
+                } else {
+                    console.log("!!!!Error: Contact with guid: "+guid+" does not exist!!!!");
+                }
+                parent.postMessage({to:'runtime:getContactUserIDs', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:addContact') {
                 let guid = event.data.body.guid;
                 let fname = event.data.body.fname;
                 let lname = event.data.body.lname;
                 console.log('##Inside Core: Adding a new contact with firstname: ' + fname+' '+lname+' GUDI: '+ guid);
                 let success = runtime.graphConnector.addContact(guid, fname, lname);
+                if (success) {
+                  console.log('successfully Added contact with guid:\"'+guid+'\"');
+                } else {
+                  console.log('Contact with guid:\"'+guid+'\" was not added successfully');
+                }
                 parent.postMessage({to:'runtime:addContact', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:getContact') {
                 let username = event.data.body.username;
@@ -234,12 +261,12 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                         }
                         parent.postMessage({to:'runtime:getContact', body:{"found" : true, "userList": userList}}, '*');
                     }
-                } 
+                }
             } else if (event.data.to === 'graph:checkGUID'){
                 let guid = event.data.body.guid;
 
                 console.log("##Inside core: looking conctacts of user with GUID: " + guid);
-                
+
                 let usersDirectContact = runtime.graphConnector.checkGUID(guid)[0][0];
                 let usersFoF = runtime.graphConnector.checkGUID(guid)[0][1];
 
@@ -311,9 +338,9 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 if(owner == null){
                     parent.postMessage({to:'runtime:getOwner', body :{"success": false, "owner": owner}}, '*');
                 } else {
-                    console.log("!!!!Owner is: " + 
+                    console.log("!!!!Owner is: " +
                         "\nFirstname " + owner.firstName +
-                        "\nLast Name " + owner.lastName + 
+                        "\nLast Name " + owner.lastName +
                         "\nGUID "+ owner.guid +
                         "\nNo of groups " + owner.groups.length +
                         "\nResidence Location " + owner.residenceLocation +
@@ -368,4 +395,3 @@ catalogue.getRuntimeDescriptor(runtimeURL)
         })
         parent.postMessage({to:'runtime:installed', body:{}}, '*');
     });
-
