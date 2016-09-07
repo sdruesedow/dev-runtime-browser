@@ -330,8 +330,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
             } else if (event.data.to === 'graph:setBloomFilter1HopContact') {
                 console.log("##Inside set bloom filter");
                 let guid = event.data.body.guid;
-                let bloomFilterOwner = runtime.graphConnector.contactsBloomFilter1Hop;
-                console.log("##setting the bloom filter for a contact : " + runtime.graphConnector.setBloomFilter1HopContact(guid, bloomFilterOwner));
+                let bloomFilter = event.data.body.bloomFilter;
+                //let bloomFilterOwner = runtime.graphConnector.contactsBloomFilter1Hop;
+                let success = runtime.graphConnector.setBloomFilter1HopContact(guid, bloomFilter);
+                console.log("##setting the bloom filter for a contact status: " + success);
+                parent.postMessage({to:'runtime:setBloomFilter1HopContact', body :{"success": success}}, '*');
             } else if (event.data.to === 'graph:getOwner') {
                 console.log("##Inside core: get Owner Details");
                 let owner = runtime.graphConnector.getOwner();

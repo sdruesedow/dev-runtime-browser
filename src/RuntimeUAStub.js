@@ -317,7 +317,7 @@ let runtimeAdapter = {
         });
     },
 
-    setBloomFilter1HopContact: (guid)=> {
+    setBloomFilter1HopContact: (guid, bloomFilter)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
@@ -326,7 +326,7 @@ let runtimeAdapter = {
                 }
             };
             window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'graph:setBloomFilter1HopContact', body:{"guid": guid}}, '*')
+            iframe.contentWindow.postMessage({to:'graph:setBloomFilter1HopContact', body:{"guid": guid, "bloomFilter": bloomFilter}}, '*')
         });
     },
 
