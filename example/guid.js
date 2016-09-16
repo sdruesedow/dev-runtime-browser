@@ -111,6 +111,12 @@ function messageHandler(event) {
     console.log('generateGUID: ' + event.data.body.guid);
   } else if (event.data.to === 'runtime:queryGlobalRegistry') {
     console.info(event.data.body.queriedContact);
+    if(event.data.body.queriedContact._userIDs !== null) {
+      $('.testResult')
+    } else {
+      $('.testResult')
+        .html("<h5>Error is  "+queriedContact+" </h5>");
+    }
   } else if (event.data.to === 'runtime:useGUID') {
     let record = event.data.body.record;
     console.info(record);

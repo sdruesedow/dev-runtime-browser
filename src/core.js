@@ -270,10 +270,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let usersDirectContact = runtime.graphConnector.checkGUID(guid)[0][0];
                 let usersFoF = runtime.graphConnector.checkGUID(guid)[0][1];
 
-                if (usersDirectContact != null || usersDirectContact != '') {
+                if (typeof usersDirectContact !== 'undefined' || typeof usersFoF !== 'undefined') {
                     console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
                         "\n LastName " + usersDirectContact.lastName +
                         "\n GUID " + usersDirectContact.guid);
+
                     parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'usersFoF': usersFoF,'usersDirectContact':usersDirectContact}}, '*');
                     // Returns 2 Array of conected friends
                    //parent.postMessage({to:'runtime:checkGUID', body:{"userDirectContacts" : usersDirectContact, "usersFoF" : usersFoF}}, '*');
@@ -319,11 +320,15 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
                 console.log("##Inside core: Querying with GUID: " + guid);
                 let queriedContact = runtime.graphConnector.queryGlobalRegistry(guid).then(function (queriedContact){
+                    parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": queriedContact}}, '*');
+                    console.log('Queried Contact is '+queriedContact);
                     return queriedContact;
                 }).catch (function (error){
+                    parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": error}}, '*');
+                    console.log('!!!!Error: '+error);
                     return error;
                 });
-                parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": queriedContact}}, '*');
+                //parent.postMessage({to:'runtime:queryGlobalRegistry', body :{"queriedContact": queriedContact}}, '*');
             } else if (event.data.to === 'graph:calculateBloomFilter1Hop') {
                 console.log("##Inside bloom filter");
                 console.log("##Calculating Bloom filter : " + runtime.graphConnector.calculateBloomFilter1Hop());
