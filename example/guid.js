@@ -113,6 +113,7 @@ function messageHandler(event) {
     console.info(event.data.body.queriedContact);
     if(event.data.body.queriedContact._userIDs !== null) {
       $('.testResult')
+        .html("<h5>Queried Contact's userIDs are "+event.data.body.queriedContact._userIDs[0]+" and "+event.data.body.queriedContact._userIDs[1]+" </h5>");
     } else {
       $('.testResult')
         .html("<h5>Error is  "+queriedContact+" </h5>");
