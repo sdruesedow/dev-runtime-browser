@@ -266,18 +266,21 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 let guid = event.data.body.guid;
 
                 console.log("##Inside core: looking conctacts of user with GUID: " + guid);
-
-                let usersDirectContact = runtime.graphConnector.checkGUID(guid)[0][0];
-                let usersFoF = runtime.graphConnector.checkGUID(guid)[0][1];
-
-                if (typeof usersDirectContact !== 'undefined' || typeof usersFoF !== 'undefined') {
-                    console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
-                        "\n LastName " + usersDirectContact.lastName +
-                        "\n GUID " + usersDirectContact.guid);
-
-                    parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'usersFoF': usersFoF,'usersDirectContact':usersDirectContact}}, '*');
-                    // Returns 2 Array of conected friends
-                   //parent.postMessage({to:'runtime:checkGUID', body:{"userDirectContacts" : usersDirectContact, "usersFoF" : usersFoF}}, '*');
+                let foundContacts = runtime.graphConnector.checkGUID(guid);
+                console.info(foundContacts);
+                let usersDirectContact = foundContacts[0][0];
+                let usersFoF = foundContacts[0][1];
+                if (typeof usersDirectContact !== 'undefined') {
+                  console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
+                      "\n LastName " + usersDirectContact.lastName +
+                      "\n GUID " + usersDirectContact.guid);
+                  parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
+                  }
+                else if(typeof usersFoF !== 'undefined') {
+                  console.log("Mutual Friend found from given GUID: \n FirstName " + usersFoF.firstName +
+                      "\n LastName " + usersFoF.lastName +
+                      "\n GUID " + usersFoF.guid);
+                  parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
                 } else {
                     console.log("##This user does not have any contacts stored!!");
                     parent.postMessage({to:'runtime:checkGUID', body :{"found": false, 'GUID': guid}}, '*');
