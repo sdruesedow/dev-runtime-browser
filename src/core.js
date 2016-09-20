@@ -283,7 +283,7 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                   parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
                 } else {
                     console.log("##This user does not have any contacts stored!!");
-                    parent.postMessage({to:'runtime:checkGUID', body :{"found": false, 'GUID': guid}}, '*');
+                    parent.postMessage({to:'runtime:checkGUID', body :{"found": false, 'GUID': guid, 'result': foundContacts}}, '*');
 
                 }
             } else if (event.data.to === 'graph:removeContact') {
