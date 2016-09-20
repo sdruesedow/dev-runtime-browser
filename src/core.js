@@ -270,13 +270,13 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.info(foundContacts);
                 let usersDirectContact = foundContacts[0];
                 let usersFoF = foundContacts[1];
-                if (typeof usersDirectContact !== 'undefined') {
+                if (usersDirectContact.length !== 0) {
                   console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact[0].firstName +
                       "\n LastName " + usersDirectContact[0].lastName +
                       "\n GUID " + usersDirectContact[0].guid);
                   parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
                   }
-                else if(typeof usersFoF !== 'undefined') {
+                else if(usersFoF.length !== 0) {
                   console.log("Mutual Friend found from given GUID: \n FirstName " + usersFoF[0].firstName +
                       "\n LastName " + usersFoF[0].lastName +
                       "\n GUID " + usersFoF[0].guid);
