@@ -268,18 +268,18 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 console.log("##Inside core: looking conctacts of user with GUID: " + guid);
                 let foundContacts = runtime.graphConnector.checkGUID(guid);
                 console.info(foundContacts);
-                let usersDirectContact = foundContacts[0][0];
-                let usersFoF = foundContacts[0][1];
+                let usersDirectContact = foundContacts[0];
+                let usersFoF = foundContacts[1];
                 if (typeof usersDirectContact !== 'undefined') {
-                  console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact.firstName +
-                      "\n LastName " + usersDirectContact.lastName +
-                      "\n GUID " + usersDirectContact.guid);
+                  console.log("Direct Friend found from given GUID: \n FirstName " + usersDirectContact[0].firstName +
+                      "\n LastName " + usersDirectContact[0].lastName +
+                      "\n GUID " + usersDirectContact[0].guid);
                   parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
                   }
                 else if(typeof usersFoF !== 'undefined') {
-                  console.log("Mutual Friend found from given GUID: \n FirstName " + usersFoF.firstName +
-                      "\n LastName " + usersFoF.lastName +
-                      "\n GUID " + usersFoF.guid);
+                  console.log("Mutual Friend found from given GUID: \n FirstName " + usersFoF[0].firstName +
+                      "\n LastName " + usersFoF[0].lastName +
+                      "\n GUID " + usersFoF[0].guid);
                   parent.postMessage({to:'runtime:checkGUID', body :{"found": true, 'GUID': guid, 'result': foundContacts}}, '*');
                 } else {
                     console.log("##This user does not have any contacts stored!!");
