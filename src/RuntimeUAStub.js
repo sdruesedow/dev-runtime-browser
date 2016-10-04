@@ -65,7 +65,7 @@ let runtimeAdapter = {
         });
 	},
 
-    
+
     getAllContacts: ()=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -159,7 +159,7 @@ let runtimeAdapter = {
             iframe.contentWindow.postMessage({to:'graph:removeLocation', body:{"guid": guid}}, '*')
         });
     },
-    
+
 
 	addUserID: (userID)=> {
         return new Promise((resolve, reject)=>{
@@ -317,7 +317,7 @@ let runtimeAdapter = {
         });
     },
 
-    setBloomFilter1HopContact: (guid)=> {
+    setBloomFilter1HopContact: (guid, bloomFilter)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
@@ -326,7 +326,7 @@ let runtimeAdapter = {
                 }
             };
             window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'graph:setBloomFilter1HopContact', body:{"guid": guid}}, '*')
+            iframe.contentWindow.postMessage({to:'graph:setBloomFilter1HopContact', body:{"guid": guid, "bloomFilter": bloomFilter}}, '*')
         });
     },
 
@@ -354,6 +354,32 @@ let runtimeAdapter = {
             window.addEventListener('message', loaded);
             resolve(firstName);
             iframe.contentWindow.postMessage({to:'graph:setOwnerName', body:{'firstName': firstName, 'lastName': lastName}}, '*')
+        });
+    },
+
+    setContactUserIDs: (guid, userID)=> {
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:loadedHyperty'){
+                    window.removeEventListener('message', loaded);
+                    resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
+                }
+            };
+            window.addEventListener('message', loaded);
+            iframe.contentWindow.postMessage({to:'graph:setContactUserIDs', body:{'guid': guid, 'userID': userID}}, '*')
+        });
+    },
+
+    getContactUserIDs: (guid)=> {
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:loadedHyperty'){
+                    window.removeEventListener('message', loaded);
+                    resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
+                }
+            };
+            window.addEventListener('message', loaded);
+            iframe.contentWindow.postMessage({to:'graph:getContactUserIDs', body:{'guid': guid}}, '*')
         });
     },
 

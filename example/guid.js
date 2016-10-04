@@ -111,12 +111,45 @@ function messageHandler(event) {
     console.log('generateGUID: ' + event.data.body.guid);
   } else if (event.data.to === 'runtime:queryGlobalRegistry') {
     console.info(event.data.body.queriedContact);
+    if(event.data.body.queriedContact._userIDs !== null) {
+      $('.testResult')
+        .html("<h5>Queried Contact's userIDs are "+event.data.body.queriedContact._userIDs[0]+" and "+event.data.body.queriedContact._userIDs[1]+" </h5>");
+    } else {
+      $('.testResult')
+        .html("<h5>Error is  "+queriedContact+" </h5>");
+    }
   } else if (event.data.to === 'runtime:useGUID') {
     let record = event.data.body.record;
     console.info(record);
   } else if (event.data.to === 'runtime:sendGlobalRegistryRecord') {
     let record = event.data.body.record;
     console.info(record);
+  } else if (event.data.to === 'runtime:setContactUserIDs') {
+    let success = event.data.body.result;
+    if (success) {
+      $('.testResult')
+        .html("<h5>Succesfuly added user ID</h5>");
+      //console.log('Succesfuly added group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: UserID already exist or the contact with GUID does not exist  </h5>");
+      //console.log('Group name was not added!')
+    };
+  } else if (event.data.to === 'runtime:getContactUserIDs') {
+    let success = event.data.body.result;
+    if (success != 'Contact Does not exist') {
+      $('.testResult')
+        .html("<h5>User IDs are : </h5>");
+      for (var i = 0; i < success.length; i++) {
+        $('.testResult')
+          .append("<h5><b>"+ success[i] +" </b> </h5>");
+      }
+      //console.log('Succesfuly added group name')
+    } else {
+      $('.testResult')
+        .html("<h5>!!!!Error: Contact with this guid doesnot exist </h5>");
+      //console.log('Group name was not added!')
+    };
   } else if (event.data.to === 'runtime:getOwner') {
     $('.testResult')
         .html("<h5>Owner's first and last name is : " + event.data.body.owner._firstName + " and " + event.data.body.owner._lastName + " respectively.</h5>");
@@ -166,7 +199,8 @@ function runtimeInstalled(runtime) {
     runtime.sendGlobalRegistryRecord("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ");
     runtime.queryGlobalRegistry('budc8fucd8cdsc98dc899dc');
     runtime.calculateBloomFilter1Hop();
-    runtime.setBloomFilter1HopContact('budc8fucd8cdsc98dc899dc');
+    //passing string instead of bloomfilter just for testing
+    runtime.setBloomFilter1HopContact('budc8fucd8cdsc98dc899dc', 'bloomFilter');
     runtime.signGlobalRegistryRecord();
     runtime.addContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime');
     runtime.editContact('jdfjhdskfkdshfbdkfkjff989e', 'TestingNew', 'runtime', 'hfjdsbsjfhdiusfbuidshfcudss87cv7ds8c7d', true);
@@ -288,12 +322,19 @@ $('#getOwner')
     runtime.getOwner();
 
   });
+$('#setGetContactUserID')
+    .on('click', () => {
+      runtime.addContact('budc8fucd8cdsc98dc899dcadduserIDtest', 'contactUserIDTest', 'Test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'facebook.com/contact');
+      runtime.getContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest');
+  });
 $('#setOwner')
   .on('click', () => {
     runtime.setOwnerName('OwnerFirstNameJohn', 'OwnerLastNameKennedy').then(function (result){
       console.log(" result from promise is " + result);
     });
-
   });
 $('#sendGlobalRegistryRecord')
   .on('click', () => {
