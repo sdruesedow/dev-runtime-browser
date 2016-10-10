@@ -161,7 +161,7 @@ let runtimeAdapter = {
     },
 
 
-	addUserID: (userID)=> {
+	addUserID: (uid,domain)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
@@ -170,11 +170,11 @@ let runtimeAdapter = {
                 }
             };
             window.addEventListener('message', loaded);
-		    iframe.contentWindow.postMessage({to:'graph:addUserID', body:{"userID" : userID}}, '*')
+		    iframe.contentWindow.postMessage({to:'graph:addUserID', body:{"uid" : uid , "domain":domain}}, '*')
         });
 	},
 
-    removeUserID: (userID)=> {
+    removeUserID: (uid,domain)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
@@ -183,10 +183,22 @@ let runtimeAdapter = {
                 }
             };
             window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'graph:removeUserID', body:{"userID" : userID}}, '*')
+            iframe.contentWindow.postMessage({to:'graph:removeUserID', body:{"uid" : uid , "domain":domain}}, '*')
         });
     },
 
+    setDefaults: (voice, chat , video)=> {
+        return new Promise((resolve, reject)=>{
+            let loaded = (e)=>{
+                if(e.data.to === 'runtime:loadedHyperty'){
+                    window.removeEventListener('message', loaded);
+                    resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
+                }
+            };
+            window.addEventListener('message', loaded);
+            iframe.contentWindow.postMessage({to:'graph:setDefaults', body:{"voice" : voice , "chat":chat,"video":video}}, '*')
+        });
+    },
     addContact: (guid, fname, lname)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
@@ -357,7 +369,7 @@ let runtimeAdapter = {
         });
     },
 
-    setContactUserIDs: (guid, userID)=> {
+    setContactUserIDs: (guid, uid , domain)=> {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
@@ -366,7 +378,7 @@ let runtimeAdapter = {
                 }
             };
             window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'graph:setContactUserIDs', body:{'guid': guid, 'userID': userID}}, '*')
+            iframe.contentWindow.postMessage({to:'graph:setContactUserIDs', body:{'guid': guid, 'uid': uid,"domain":domain}}, '*')
         });
     },
 

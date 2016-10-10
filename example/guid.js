@@ -186,8 +186,8 @@ function runtimeInstalled(runtime) {
 
   $('.getDet').on('click', (e)=>{
     runtime.generateGUID();
-    runtime.addUserID('facebook.com/felix');
-    runtime.removeUserID('facebook.com/felix');
+    runtime.addUserID('facebook.com/felix','google.com');
+    runtime.removeUserID('facebook.com/felix','google.com');
     runtime.addContact('budc8fucd8cdsc98dc899dc', 'reThinkUser', 'Test');
     runtime.getContact('reThinkUser');
     runtime.checkGUID('budc8fucd8cdsc98dc899dc');
@@ -213,6 +213,7 @@ function runtimeInstalled(runtime) {
     runtime.getAllContacts();
     runtime.setLocation('123456', 'Berlin');
     runtime.removeLocation('123456');
+    runtime.setDefaults('a','b','c');
   //let hypertyObserver = 'hyperty-catalogue://' + runtime.domain + '/.well-known/hyperty/HelloWorldObserver';
 
   // Load First Hyperty
@@ -243,13 +244,13 @@ $('#generateGUID')
 
 $('#addUserID')
   .on('click', () => {
-    runtime.addUserID('facebook.com/felix');
+    runtime.addUserID('facebook.com/felix','google.com');
 
   });
 
 $('#removeUserID')
   .on('click', () => {
-    runtime.removeUserID('facebook.com/felix');
+    runtime.removeUserID('facebook.com/felix','google.com');
 
   });
 
@@ -325,9 +326,9 @@ $('#getOwner')
 $('#setGetContactUserID')
     .on('click', () => {
       runtime.addContact('budc8fucd8cdsc98dc899dcadduserIDtest', 'contactUserIDTest', 'Test');
-      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
-      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test');
-      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'facebook.com/contact');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test','google.com');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'test.com/test','google.com');
+      runtime.setContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest', 'facebook.com/contact','google.com');
       runtime.getContactUserIDs('budc8fucd8cdsc98dc899dcadduserIDtest');
   });
 $('#setOwner')

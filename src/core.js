@@ -194,33 +194,49 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     parent.postMessage({to:'runtime:generateGUID', body:{"success" : false, "guid" : userGUID, }}, '*');
                 }
             } else if (event.data.to === 'graph:addUserID') {
-                console.log('##Inside core: Adding userID: '+ event.data.body.userID);
-                let success = runtime.graphConnector.addUserID(event.data.body.userID);
+                console.log('##Inside core: Adding userID with uid: '+ event.data.body.uid +' and domain ' + event.data.body.domain);
+                let success = runtime.graphConnector.addUserID(event.data.body.uid, event.data.body.domain);
                 if(success) {
-                    console.log("!!!!Added \""+ event.data.body.userID +"\" successfully!!!!");
+                    console.log("!!!!Added \""+ event.data.body.uid + ', ' +event.data.body.domain+"\" successfully!!!!");
                 } else {
-                    console.log("!!!Error: \""+ event.data.body.userID +"\" already exists!!!");
+                    console.log("!!!Error: \""+ event.data.body.uid+ ', ' +event.data.body.domain +"\" already exists!!!");
                 }
                 parent.postMessage({to:'runtime:addUserID', body:{"result" : success}}, '*');
             } else if (event.data.to === 'graph:removeUserID') {
-                let userID = event.data.body.userID;
-                console.log('##Inside core: Removing userID: ' + userID);
-                let success = runtime.graphConnector.removeUserID(userID);
+                let uid = event.data.body.uid;
+                let domain = event.data.body.domain;
+                console.log('##Inside core: Removing userID: ' + uid +','+domain);
+                let success = runtime.graphConnector.removeUserID(uid,domain);
                 if(success){
-                    console.log("!!!!Removed \""+ event.data.body.userID +"\" successfully!!!!");
+                    console.log("!!!!Removed \""+ event.data.body.uid+',' +event.data.body.domain +"\" successfully!!!!");
                 } else {
-                    console.log("!!!!Error: \""+ event.data.body.userID +"\" does not exist!!!!");
+                    console.log("!!!!Error: \""+ event.data.body.uid+',' +event.data.body.domain +"\" does not exist!!!!");
                 }
                 parent.postMessage({to:'runtime:removeUserID', body:{"result" : success}}, '*');
-            }  else if (event.data.to === 'graph:setContactUserIDs') {
-                let userID = event.data.body.userID;
-                let guid = event.data.body.guid;
-                console.log('##Inside core: Adding userID: \"'+ userID +'\" for the contact with guid: \"' + guid +'\"');
-                let success = runtime.graphConnector.setContactUserIDs(guid, userID);
+            } else if (event.data.to === 'graph:setDefaults') {
+
+                let voice = event.data.body.voice;
+                let chat = event.data.body.chat;
+                let video = event.data.body.video;
+                console.log('##Inside core: set User Defaults : ' + voice +','+chat+','+video);
+                let success = runtime.graphConnector.setDefaults(voice,chat,video);
                 if(success){
-                    console.log("!!!!Added userID: \""+ userID +"\" for the contact with guid: \""+ guid +"\" successfully!!!!");
+                    console.log("!!!!set \""+ event.data.body.voice+',' +event.data.body.chat +','+ event.data.body.video+"\" successfully!!!!");
                 } else {
-                    console.log("!!!!Error: \""+ userID +"\" already exist or contact with guid: "+guid+" does not exist!!!!");
+                    console.log("!!!!Error: \""+ event.data.body.voice+',' +event.data.body.chat +','+ event.data.body.video +"\" does not exist!!!!");
+                }
+                parent.postMessage({to:'runtime:setDefaults', body:{"result" : success}}, '*');
+            }  else if (event.data.to === 'graph:setContactUserIDs') {
+
+                let guid = event.data.body.guid;
+                let uid = event.data.body.uid;
+                let domain = event.data.body.domain;
+                console.log('##Inside core: Adding userID: \"'+ uid +','+domain+'\" for the contact with guid: \"' + guid +'\"');
+                let success = runtime.graphConnector.setContactUserIDs(guid, uid,domain);
+                if(success){
+                    console.log("!!!!Added userID: \""+ uid +','+domain+"\" for the contact with guid: \""+ guid +"\" successfully!!!!");
+                } else {
+                    console.log("!!!!Error: \""+ uid +','+domain +"\" already exist or contact with guid: "+guid+" does not exist!!!!");
                 }
                 parent.postMessage({to:'runtime:setContactUserIDs', body:{"result" : success}}, '*');
             }  else if (event.data.to === 'graph:getContactUserIDs') {
