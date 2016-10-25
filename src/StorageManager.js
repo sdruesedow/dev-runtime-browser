@@ -20,40 +20,43 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-import SandboxWorker from './SandboxWorker'
-import SandboxApp from './SandboxApp'
-import Request from './Request'
-import storageManager from './StorageManager'
-import {RuntimeCatalogueLocal, RuntimeCatalogue} from 'service-framework/dist/RuntimeCatalogue'
 
-const RuntimeFactory = Object.create({
-	createSandbox(){
-		return new SandboxWorker('./context-service.js')
-	},
-
-	createAppSandbox(){
-		return new SandboxApp()
-	},
-
-	createHttpRequest() {
-		let request = new Request()
-		return request
-	},
-
-	createRuntimeCatalogue(development){
-		if(!this.catalogue)
-			this.catalogue = development?new RuntimeCatalogueLocal(this):new RuntimeCatalogue(this)
-
-		return this.catalogue
-	},
-
-	atob(b64) {
-		return atob(b64)
-	},
-
-	storageManager() {
-		return storageManager
-	}
+import Dexie from 'dexie'
+const db = new Dexie('cache')
+db.version(1).stores({
+	objects: 'key,version,value'
 })
+db.open().catch(console.error)
 
-export default RuntimeFactory
+const storageManager = {
+	set: (key, version, value) => {
+		return db.objects.put({key:key, version:version, value:value})
+	},
+
+	get: (key) => {
+		return db.objects.where('key')
+			.equals(key)
+			.first()
+			.then(object => {
+				return object.value
+			})
+	},
+
+	getVersion: (key) => {
+		return db.objects.where('key')
+			.equals(key)
+			.first()
+			.then(object => {
+				return object.version
+			})
+	},
+
+	delete: (key) => {
+		return db.objects
+			.where('key')
+			.equals(key)
+			.delete()
+	}
+}
+
+export default storageManager
