@@ -38,7 +38,10 @@ const storageManager = {
 			.equals(key)
 			.first()
 			.then(object => {
-				return object.value
+				if(object)
+					return object.value
+
+				return
 			})
 	},
 

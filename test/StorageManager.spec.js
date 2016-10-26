@@ -26,6 +26,14 @@ describe('StorageManager', function(){
 
 				})
 		})
+
+		it('should return undefined if no object with the given key exists', function(done){
+			storageManager.get('key123')
+				.then( object => {
+					expect(object).to.be.undefined
+					done()
+				})
+		})
 	})
 
 	describe('getVersion', function(){
