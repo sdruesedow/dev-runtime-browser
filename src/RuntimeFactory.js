@@ -20,45 +20,49 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 **/
-import PersistenceManager from 'service-framework/dist/PersistenceManager';
-import SandboxWorker from './SandboxWorker';
-import SandboxApp from './SandboxApp';
-import Request from './Request';
-import storageManager from './StorageManager'
-import {RuntimeCatalogueLocal, RuntimeCatalogue} from 'service-framework/dist/RuntimeCatalogue';
+import PersistenceManager from 'service-framework/dist/PersistenceManager'
+import SandboxWorker from './SandboxWorker'
+import SandboxApp from './SandboxApp'
+import Request from './Request'
+import storageManager from 'service-framework/dist/StorageManager'
+import Dexie from 'dexie'
+import { RuntimeCatalogue } from 'service-framework/dist/RuntimeCatalogue'
 
 const RuntimeFactory = Object.create({
-    createSandbox(){
-        return new SandboxWorker('./context-service.js');
-    },
+	createSandbox() {
+		return new SandboxWorker('./context-service.js')
+	},
 
-    createAppSandbox(){
-        return new SandboxApp();
-    },
+	createAppSandbox() {
+		return new SandboxApp()
+	},
 
-    createHttpRequest() {
-        let request = new Request();
-        return request;
-    },
+	createHttpRequest() {
+		let request = new Request()
+		return request
+	},
 
-    createRuntimeCatalogue(development){
-        if(!this.catalogue)
-            this.catalogue = new RuntimeCatalogue(this);
+	createRuntimeCatalogue() {
+		if (!this.catalogue)
+			this.catalogue = new RuntimeCatalogue(this)
 
-        return this.catalogue;
-    },
+		return this.catalogue
+	},
 
-    atob(b64) {
-      return atob(b64);
-    },
+	atob(b64) {
+		return atob(b64)
+	},
 
-    persistenceManager() {
-      let localStorage = window.localStorage;
-      return new PersistenceManager(localStorage);
-    },
+	persistenceManager() {
+		let localStorage = window.localStorage
+		return new PersistenceManager(localStorage)
+	},
 
 	storageManager() {
-		return storageManager
+		const db = new Dexie('cache')
+		const storeName = 'objects'
+
+		return new storageManager(db, storeName)
 	}
 })
 
