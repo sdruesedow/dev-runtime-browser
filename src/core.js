@@ -21,8 +21,10 @@
  * limitations under the License.
  **/
 import URI from 'urijs';
+import IdentitiesGUI from './admin/IdentitiesGUI';
 import PoliciesGUI from './admin/PoliciesGUI';
 import RuntimeFactory from './RuntimeFactory';
+import graphConnectorGUI from './admin/graphConnectorGUI';
 
 try{
     window.cordova = parent.cordova !== undefined
@@ -65,7 +67,11 @@ catalogue.getRuntimeDescriptor(runtimeURL)
         eval.apply(window, [sourcePackage.sourceCode])
 
         let runtime = new Runtime(RuntimeFactory, window.location.host);
-        let gui = new PoliciesGUI(runtime.policyEngine);
+
+        new PoliciesGUI(runtime.policyEngine);
+		new graphConnectorGUI(runtime.graphConnector);
+		let identitiesGUI = new IdentitiesGUI(runtime.identityModule);
+
 
         window.addEventListener('message', function(event){
             if(event.data.to==='core:loadHyperty'){
@@ -80,8 +86,6 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                     runtime.loadHyperty(descriptor)
                         .then(returnHyperty.bind(null, event.source));
                 }
-
-
             }else if(event.data.to === 'graph:getAllContacts'){
 
                 console.log("##Inside core: returning all contacts");
@@ -410,8 +414,14 @@ catalogue.getRuntimeDescriptor(runtimeURL)
                 } else {
                     parent.postMessage({to:'runtime:editContact', body :{"success": false, "contact": result}}, '*');
                 }
-            } else if(event.data.to==='core:close'){
-                runtime.close()
+            } else if(event.data.to==='core:loadStub'){
+                runtime.loadStub(event.data.body.domain).then((result) => {
+                  console.log('Stub Loaded: ', result);
+                }).catch((error) => {
+                  console.error('Stub error:', error);
+                })
+            }else if(event.data.to==='core:close'){
+				    runtime.close()
                     .then(event.source.postMessage({to: 'runtime:runtimeClosed', body: true}, '*'))
                     .catch(event.source.postMessage({to: 'runtime:runtimeClosed', body: false}, '*'))
             }

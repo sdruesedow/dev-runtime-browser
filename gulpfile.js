@@ -140,8 +140,15 @@ gulp.task('bundle:guid', function(){
 gulp.task('bundle:policies-gui', function () {
   return bundle('./src/admin/PoliciesGUI.js', 'policies-gui', 'bin');
 });
+gulp.task('bundle:identities-gui', function () {
+  return bundle('./src/admin/IdentitiesGUI.js', 'identities-gui', 'bin');
+});
 
-gulp.task('bundle', ['bundle:rethink', 'bundle:core', 'bundle:context', 'bundle:policies-gui']);
+gulp.task('bundle:graphConnector-gui', function () {
+	return bundle('./src/admin/graphConnectorGUI.js', 'graphConnector-gui', 'bin');
+});
+
+gulp.task('bundle', ['bundle:rethink', 'bundle:core', 'bundle:context', 'bundle:policies-gui', 'bundle:identities-gui' ,'bundle:graphConnector-gui']);
 
 /**
  * Bumping version number and tagging the repository with it.
