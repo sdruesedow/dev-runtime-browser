@@ -23,9 +23,9 @@ class graphConnectorGUI {
 			//adding contact again to do further testing
 			console.info(graphConnector.addContact('budc8fucd8cdsc98dc899dc', 'reThinkUser', 'Test'));
 			console.info(graphConnector.checkGUID('budc8fucd8cdsc98dc899dc'));
-			console.info(graphConnector.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp'));
-			console.info(graphConnector.sendGlobalRegistryRecord("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
-			console.info(graphConnector.queryGlobalRegistry('budc8fucd8cdsc98dc899dc'));
+			//console.info(graphConnector.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp'));
+			//console.info(graphConnector.sendGlobalRegistryRecord("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+			//console.info(graphConnector.queryGlobalRegistry('budc8fucd8cdsc98dc899dc'));
 			console.info(graphConnector.calculateBloomFilter1Hop());
 			//passing string instead of bloomfilter just for testing
 			console.info(graphConnector.setBloomFilter1HopContact('budc8fucd8cdsc98dc899dc', 'bloomFilter'));
@@ -43,7 +43,24 @@ class graphConnectorGUI {
 			console.info(graphConnector.removeLocation('123456'));
 			console.info(graphConnector.setDefaults('a', 'b', 'c'));
 		});
+
+		$('.useGUID').off();
+		$('.useGUID').on('click', (event) => {
+			console.info(graphConnector.useGUID('grey climb demon snap shove fruit grasp hum self grey climb demon snap shove fruit grasp'));
+		});
+
+		$('.sendGlobalRegistryRecord').off();
+		$('.sendGlobalRegistryRecord').on('click', (event) => {
+			console.info(graphConnector.sendGlobalRegistryRecord("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+		});
+
+		$('.queryGlobalRegistry').off();
+		$('.queryGlobalRegistry').on('click', (event) => {
+
+			console.info(graphConnector.queryGlobalRegistry('budc8fucd8cdsc98dc899dc'));
+		});
 	}
+
 
 
 }
