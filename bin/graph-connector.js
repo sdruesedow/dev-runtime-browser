@@ -291,7 +291,7 @@ function send_global_registry_record() {
 		return "NO such GUID";
 
 	} else {
-		console.log(result.jwt);
-		window.runtime.runtime.sendGlobalRegistryRecord(result.jwt);
+		console.log(result);
+		window.runtime.runtime.sendGlobalRegistryRecord(result);
 	}
 }
