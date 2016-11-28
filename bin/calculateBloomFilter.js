@@ -19,17 +19,11 @@
         bloom.add('bXBhhJm-o40WBIcXQQECH0-_MqNux6p3ANxt7lFA-Mg');
       }
     if(!internal) {
-      window.runtime.runtime.setBloomFilter1HopContact(guid, bloom);
-      window.addEventListener("message", bloomFilterEventHandler, false);
+      let body = window.runtime.runtime.setBloomFilter1HopContact(guid, bloom);
+		let success = body.success;
+		console.log('Bloom Filter success status: ' + success);
     }
     return bloom;
-  }
-
-  function bloomFilterEventHandler(event) {
-    if(event.data.to === 'runtime:setBloomFilter1HopContact') {
-      let success = event.data.body.success;
-      console.log('Bloom Filter success status: ' + success);
-    }
   }
 /*
   function checkGUID(contactList, guid) {

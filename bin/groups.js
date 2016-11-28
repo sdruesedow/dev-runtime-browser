@@ -44,46 +44,39 @@ $(document).ready(function () {
 function getGroups() {
 
     console.log("function get Groups ");
-    window.runtime.runtime.getGroupNames();
-    window.addEventListener("message", getGroupNamesEventHandler, false);
-}
+    let result = window.runtime.runtime.getGroupNames();
 
-function getGroupNamesEventHandler() {
+	console.log("Groups " + result);
 
-    if (event.data.to == "runtime:getGroupNames") {
-        result = event.data.body.result;
-        console.log("Groups " + result);
+	select = document.getElementById('selectElementId');
 
-        select = document.getElementById('selectElementId');
+	if (result.length != 0) {
+		var j;
+		for (j = select.options.length - 1; j >= 0; j--) {
+			select.remove(j);
+		}
 
-        if (result.length != 0) {
-            var j;
-            for (j = select.options.length - 1; j >= 0; j--) {
-                select.remove(j);
-            }
+		var opt1 = document.createElement('option');
+		opt1.value = "all";
+		opt1.innerHTML = "All Contacts";
+		select.appendChild(opt1);
 
-            var opt1 = document.createElement('option');
-            opt1.value = "all";
-            opt1.innerHTML = "All Contacts";
-            select.appendChild(opt1);
-
-            for (var i = 0; i < result.length; i++) {
-                var opt = document.createElement('option');
-                opt.value = result[i];
-                opt.innerHTML = result[i];
-                select.appendChild(opt);
-            }
-        } else {
-            var j;
-            for (j = select.options.length - 1; j >= 0; j--) {
-                select.remove(j);
-            }
-            var opt1 = document.createElement('option');
-            opt1.value = "all";
-            opt1.innerHTML = "All Contacts";
-            select.appendChild(opt1);
-        }
-    }
+		for (var i = 0; i < result.length; i++) {
+			var opt = document.createElement('option');
+			opt.value = result[i];
+			opt.innerHTML = result[i];
+			select.appendChild(opt);
+		}
+	} else {
+		var j;
+		for (j = select.options.length - 1; j >= 0; j--) {
+			select.remove(j);
+		}
+		var opt1 = document.createElement('option');
+		opt1.value = "all";
+		opt1.innerHTML = "All Contacts";
+		select.appendChild(opt1);
+	}
 }
 
 function get_group_users(groupname) {
@@ -91,21 +84,14 @@ function get_group_users(groupname) {
     if (groupname == "all") {
         getAllContacts();
     } else {
-        window.runtime.runtime.getGroup(groupname);
-        window.addEventListener("message", getAllGroupUsersEventHandler, false);
-    }
-}
+        let result = window.runtime.runtime.getGroup(groupname);
 
-function getAllGroupUsersEventHandler(event) {
-
-    if (event.data.to == "runtime:getGroup") {
-        result = event.data.body.result;
-        if (result == null) {
-            return "NO users in this Group";
-        } else {
-            createFriendListGC(result, 0);
-            console.log(result[0]._firstName);
-        }
+		if (result == null) {
+			return "NO users in this Group";
+		} else {
+			createFriendListGC(result, 0);
+			console.log(result[0]._firstName);
+		}
     }
 }
 
