@@ -9,6 +9,7 @@ class PoliciesGUI {
     this._setListeners();
   }
 
+
   _addMember() {
     let group = event.target.id;
     $('.member-new-intro').html('<h5>Add a member to a group</h5><p>Insert a user email below to add to the "' + group + '" group.</p>');
