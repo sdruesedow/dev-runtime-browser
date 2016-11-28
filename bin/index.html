@@ -65,11 +65,6 @@
 		return $("<div class='dialog' style='text-align: center;' title='" + title + "'><p>Write down these words to login with the same GUID later. Do not give your private mnemonic to anyone else.</p><br\><strong>" + text + "</strong></div>").dialog(options);
 	}
 
-	function copyToClipboard(text) {
-		window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-	}
-
-
 	function detailsGC(contact, j) {
 		console.log(obj);
 		if (contact.length !== 0) {
@@ -164,20 +159,12 @@
 
 		update_owner_information();
 		$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *GUID was generated and your mnemonic is \"' + userGUID + '\"</span>');
-		let popup = createDialog('Mnemonic Pop-Up', userGUID,
-				{
-					autoOpen: false,
-					height: 250,
-					width: 350,
-					buttons: [{
-						text: 'Copy to clipboard',
-						'click': function () {
-							copyToClipboard(userGUID);
-							;
-						}
-					}]
-				});
-		popup.dialog('open');
+
+		$.fancybox({
+			type: "html",
+			content: "<p class=" + "title0" + "> Copy and save this Mnemonic :   " + userGUID + "  </p>"
+		});
+
 	}
 
 	function checkGUIDRuntime() {
@@ -226,29 +213,7 @@
 					content: contentHTML
 				});
 			}
-		} else if (event.data.to == 'runtime:generateGUID') {
-
-			let userGUID = event.data.body.guid;
-			update_owner_information();
-
-			console.log('@@@ Recrevived PostMsg to ' + event.data.to);
-			//$("#footer").append('<span style="font-family:Verdana;font-size:12px;font-weight:bold;" class="label "> *GUID is \"' + userGUID + '\"</span>');
-			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *GUID was generated and your mnemonic is \"' + userGUID + '\"</span>');
-			let popup = createDialog('Mnemonic Pop-Up', userGUID,
-					{
-						autoOpen: false,
-						height: 250,
-						width: 350,
-						buttons: [{
-							text: 'Copy to clipboard',
-							'click': function () {
-								copyToClipboard(userGUID);
-								;
-							}
-						}]
-					});
-			popup.dialog('open');
-		}
+		} 
 	}
 
 	function checkGUIDLocal() {
