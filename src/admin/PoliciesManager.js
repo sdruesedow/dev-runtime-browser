@@ -432,7 +432,7 @@ class PoliciesManager {
     return groupsGUI;
   }
 
-  getGroupsNamesgetGroupsNames() {
+  getGroupsNames() {
     return this.policyEngine.context.getGroupsNames();
   }
 
