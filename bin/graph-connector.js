@@ -182,6 +182,18 @@ $(document).ready(function () {
 		let guid = data[0]["value"];
 		console.log(" 2222222 queryGlobalRegistry");
 		let result = window.runtime.runtime.queryGlobalRegistry(guid);
+		window.addEventListener("message", QueryEventHandler, false);
+
+		return false;
+	});
+
+});
+
+
+function QueryEventHandler(event) {
+
+	if (event.data.to == "runtime:queryGlobalRegistry") {
+		let result = event.data.body.queriedContact;
 
 		if (result === 'GUID not found') {
 			$.fancybox({
@@ -193,12 +205,9 @@ $(document).ready(function () {
 			console.log("result of queryGlobalRegistry");
 			console.log(result);
 			contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
-
-			for (let i = 0; i < result._userIDs.length; i++) {
-				contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid + "</b><br>";
-				contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].domain + "</b><br>";
+			for (var i = 0; i < result._userIDs.length; i++) {
+				contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i] + "</b><br>";
 			}
-
 			contentHTML += "</p>";
 			window.runtime.runtime.checkGUID(result._guid);
 			console.info(obj);
@@ -207,11 +216,10 @@ $(document).ready(function () {
 				content: contentHTML
 			});
 		}
+	}
 
-		return false;
-	});
+}
 
-});
 
 function get_owner_information() {
 
