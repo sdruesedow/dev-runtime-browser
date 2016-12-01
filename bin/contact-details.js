@@ -177,15 +177,41 @@ function removeFriend(j) {
 }
 
 function add_to_group(i) {
-	let group_name = prompt("Please enter the Group name ", "");
-	if (group_name != "" && group_name != null) {
-		window.runtime.runtime.addGroupName(obj[i]._guid, group_name);
-		$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> ' + obj[i]._firstName + " was successfully added to " + group_name + '\" </span>');
-		getAllContacts();
-		details(i);
-	} else {
 
-	}
+	var html = "<p class='title'></p>" +
+		"<p>&nbsp;</p>"+
+		"<label>Group Name</label>"+
+		"<input name='gname' type='text' id='gname' class='text ui-widget-content ui-corner-all'/><br>"+
+		"<p>&nbsp;</p>"+
+		" <input type='button' class='confirm yes' value='Yes' /><input type='button' class='confirm no' value='No' />";
+
+	$.fancybox({
+		type: "html",
+		content: html,
+		beforeShow: function () {
+			$(".title").html("Enter the Group Name !");
+		},
+		afterShow: function () {
+			$(".confirm").on("click", function (event) {
+				if ($(event.target).is(".yes")) {
+					group_name = $("#gname").val();
+					if (group_name != "" && group_name != null) {
+						window.runtime.runtime.addGroupName(obj[i]._guid, group_name);
+						$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> ' + obj[i]._firstName + " was successfully added to " + group_name + '\" </span>');
+						getAllContacts();
+						details(i);
+					} else {
+
+					}
+
+					ret = true;
+				} else if ($(event.target).is(".no")) {
+					ret = false;
+				}
+				$.fancybox.close();
+			});
+		}
+	});
 }
 
 
