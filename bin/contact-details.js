@@ -160,20 +160,40 @@ function edit_values(l, j) {
 
 
 function removeFriend(j) {
-	if (confirm('Are you sure you want to delete this friend from your friend list?')) {
-		let userdel = obj[j]._firstName;
-		window.runtime.runtime.removeContact(obj[j]._guid);
-		deleteRecordByFileName(obj, userdel);
 
-		if (obj.length == 0) {
-			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> *All the contacts have been deleted</span>');
-			getAllContacts();
-		} else {
-			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *Your friend \"' + userdel + '\" has been successfully removed </span>');
-			details(0);
-			getAllContacts();
+
+	var html = "<p class='title'></p>" +
+		" <input type='button' class='confirm yes' value='Yes' /><input type='button' class='confirm no' value='No' />";
+
+	$.fancybox({
+		type: "html",
+		content: html,
+		beforeShow: function () {
+			$(".title").html("Are you sure you want to delete this friend from your friend list?");
+		},
+		afterShow: function () {
+			$(".confirm").on("click", function (event) {
+				if ($(event.target).is(".yes")) {
+					let userdel = obj[j]._firstName;
+					window.runtime.runtime.removeContact(obj[j]._guid);
+					deleteRecordByFileName(obj, userdel);
+
+					if (obj.length == 0) {
+						$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> *All the contacts have been deleted</span>');
+						getAllContacts();
+					} else {
+						$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *Your friend \"' + userdel + '\" has been successfully removed </span>');
+						details(0);
+						getAllContacts();
+					}
+					ret = true;
+				} else if ($(event.target).is(".no")) {
+					ret = false;
+				}
+				$.fancybox.close();
+			});
 		}
-	}
+	});
 }
 
 function add_to_group(i) {
