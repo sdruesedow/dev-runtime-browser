@@ -322,7 +322,7 @@ function checkGUIDRuntime(guid) {
 		});
 
 	checkPromise.then(
-		function(foundContacts,b) {
+		function(foundContacts) {
 
 			console.info(foundContacts);
 			let DirectContact = foundContacts[0];
