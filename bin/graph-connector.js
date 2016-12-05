@@ -200,10 +200,12 @@ $(document).ready(function () {
 					console.log(result);
 					contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
 					for (var i = 0; i < result._userIDs.length; i++) {
-						contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i] + "</b><br>";
+						contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
 					}
 					contentHTML += "</p>";
-					window.runtime.runtime.checkGUID(result._guid);
+
+					checkGUIDRuntime(result._guid);
+
 					console.info(obj);
 					$.fancybox({
 						type: "html",
@@ -299,4 +301,54 @@ function send_global_registry_record() {
 		console.log(result);
 		window.runtime.runtime.sendGlobalRegistryRecord(result);
 	}
+}
+
+
+
+function checkGUIDRuntime(guid) {
+
+
+	var checkPromise = new Promise(
+		function(resolve, reject) {
+			resolve(window.runtime.runtime.checkGUID(guid));
+		});
+
+	checkPromise.then(
+		function(foundContacts,b) {
+
+			console.info(foundContacts);
+			console.info(b);
+			console.log('@@ Recrevived message from ' + event.data.to);
+			let DirectContact = foundContacts[0];
+			let FoF = foundContacts[1];
+
+			if (DirectContact.length !== 0 || FoF.length !== 0  ) {
+				console.log('FoF : ' + FoF);
+				console.log(' DirectContact : ' + DirectContact);
+				if (typeof FoF !== 'undefined') {
+					console.log('AddressBook Log: Found Mutual Friend');
+					console.info(FoF);
+					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span> Found Mutual Contact: <b><u>\"" + FoF[0]._firstName + "\"</u> with GUID: <u>\"" + FoF[0]._guid + "\"</u></b></h3><br>";
+				} else if (typeof DirectContact !== 'undefined') {
+					console.log('AddressBook Log: Found Direct Friend');
+					console.info(DirectContact);
+					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span>Found Mutual Contact: <b><u>\"" + DirectContact[0]._firstName + "\"</u> with GUID: <u>\"" + DirectContact[0]._guid + "\"</u></b></h3><br>";
+				} else {
+					console.log('AddressBook Log: No direct or mutual Friend');
+					contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
+				}
+				$.fancybox({
+					type: "html",
+					content: contentHTML
+				});
+			} else {
+				console.log('User with no contacts \n GUID: ' + guid)
+				contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
+				$.fancybox({
+					type: "html",
+					content: contentHTML
+				});
+			}
+		});
+
 }

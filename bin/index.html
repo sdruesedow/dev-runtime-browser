@@ -123,8 +123,21 @@
 
 	function search_friend() {
 		let name = $("#searchBox").val();
-		let body = window.runtime.runtime.getContact(name);
-		console.log(body);
+
+		var getContactPromise = new Promise(
+				function(resolve, reject) {
+					resolve( window.runtime.runtime.getContact(name));
+				});
+
+		getContactPromise.then(
+				function(body) {
+					console.log(body);
+					let userFirstName = body.firstName;
+					let userLastName = body.lastName;
+					$('.testResult').append("<h3>The user's firstName is <u>" + userFirstName + "<h3></u> and Last Name is <u>" + userLastName + "</u></h3>");
+
+				});
+		
 		let tempObj = [];
 		let index = 0;
 		let userList = body.userList;
@@ -167,53 +180,10 @@
 
 	}
 
-	function checkGUIDRuntime() {
-		let body = window.runtime.runtime.checkGUID(`se23ghd7899dfnf99i3n3mo039hii93jtest123`);
-		window.addEventListener("message", printContact, false);
-	}
-
-
 	function printContact(event) {
 		if (event.data.to == "runtime:getContact") {
-			let userFirstName = body.firstName;
-			let userLastName = body.lastName;
-			$('.testResult').append("<h3>The user's firstName is <u>" + userFirstName + "<h3></u> and Last Name is <u>" + userLastName + "</u></h3>");
-		} else if (event.data.to == 'runtime:checkGUID') {
-			//let found = event.data.check;
-			let foundContacts = event.data.body.result;
-			console.info(foundContacts);
-			console.log('@@ Recrevived message from ' + event.data.to);
-			let DirectContact = foundContacts[0];
-			let FoF = foundContacts[1];
-
-			if (event.data.body.found) {
-				console.log('FoF : ' + FoF);
-				console.log(' DirectContact : ' + DirectContact);
-				if (typeof FoF !== 'undefined') {
-					console.log('AddressBook Log: Found Mutual Friend');
-					console.info(FoF);
-					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span> Found Mutual Contact: <b><u>\"" + FoF[0]._firstName + "\"</u> with GUID: <u>\"" + FoF[0]._guid + "\"</u></b></h3><br>";
-				} else if (typeof DirectContact !== 'undefined') {
-					console.log('AddressBook Log: Found Direct Friend');
-					console.info(DirectContact);
-					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span>Found Mutual Contact: <b><u>\"" + DirectContact[0]._firstName + "\"</u> with GUID: <u>\"" + DirectContact[0]._guid + "\"</u></b></h3><br>";
-				} else {
-					console.log('AddressBook Log: No direct or mutual Friend');
-					contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
 				}
-				$.fancybox({
-					type: "html",
-					content: contentHTML
-				});
-			} else {
-				console.log('User with no contacts \n GUID: ' + event.data.body.GUID)
-				contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
-				$.fancybox({
-					type: "html",
-					content: contentHTML
-				});
-			}
-		} 
+
 	}
 
 	function checkGUIDLocal() {
