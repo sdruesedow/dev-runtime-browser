@@ -180,46 +180,43 @@ $(document).ready(function () {
 		//by clicking in the submit button send a request....
 		let data = $(this).serializeArray();
 		let guid = data[0]["value"];
-		console.log(" 2222222 queryGlobalRegistry");
-		let result = window.runtime.runtime.queryGlobalRegistry(guid);
-		window.addEventListener("message", QueryEventHandler, false);
+		console.log(" queryGlobalRegistry");
+
+		var p1 = new Promise(
+			function(resolve, reject) {
+				resolve(window.runtime.runtime.queryGlobalRegistry(guid));
+			});
+
+		p1.then(
+			function(result) {
+				if (result === 'GUID not found') {
+					$.fancybox({
+						type: "html",
+						content: "No such contact with this GUID"
+					});
+
+				} else {
+					console.log("result of queryGlobalRegistry");
+					console.log(result);
+					contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
+					for (var i = 0; i < result._userIDs.length; i++) {
+						contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i] + "</b><br>";
+					}
+					contentHTML += "</p>";
+					window.runtime.runtime.checkGUID(result._guid);
+					console.info(obj);
+					$.fancybox({
+						type: "html",
+						content: contentHTML
+					});
+				}
+
+			});
 
 		return false;
 	});
 
 });
-
-
-function QueryEventHandler(event) {
-
-	if (event.data.to == "runtime:queryGlobalRegistry") {
-		let result = event.data.body.queriedContact;
-
-		if (result === 'GUID not found') {
-			$.fancybox({
-				type: "html",
-				content: "No such contact with this GUID"
-			});
-
-		} else {
-			console.log("result of queryGlobalRegistry");
-			console.log(result);
-			contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
-			for (var i = 0; i < result._userIDs.length; i++) {
-				contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i] + "</b><br>";
-			}
-			contentHTML += "</p>";
-			window.runtime.runtime.checkGUID(result._guid);
-			console.info(obj);
-			$.fancybox({
-				type: "html",
-				content: contentHTML
-			});
-		}
-	}
-
-}
-
 
 function get_owner_information() {
 
