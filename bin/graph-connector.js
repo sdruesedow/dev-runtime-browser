@@ -331,11 +331,11 @@ function checkGUIDRuntime(guid) {
 			if (DirectContact.length !== 0 || FoF.length !== 0  ) {
 				console.log('FoF : ' + FoF);
 				console.log(' DirectContact : ' + DirectContact);
-				if (typeof FoF !== 'undefined') {
+				if ( FoF.length !== 0) {
 					console.log('AddressBook Log: Found Mutual Friend');
 					console.info(FoF);
 					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span> Found Mutual Contact: <b><u>\"" + FoF[0]._firstName + "\"</u> with GUID: <u>\"" + FoF[0]._guid + "\"</u></b></h3><br>";
-				} else if (typeof DirectContact !== 'undefined') {
+				} else if (DirectContact.length !== 0) {
 					console.log('AddressBook Log: Found Direct Friend');
 					console.info(DirectContact);
 					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span>Found Mutual Contact: <b><u>\"" + DirectContact[0]._firstName + "\"</u> with GUID: <u>\"" + DirectContact[0]._guid + "\"</u></b></h3><br>";
