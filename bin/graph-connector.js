@@ -37,10 +37,10 @@ $(document).ready(function () {
 		let valid = true;
 		valid = valid && checkLength(fname, "firstname", 1, 20);
 		valid = valid && checkLength(lname, "lastlname", 1, 20);
-		valid = valid && checkLength(guid, "guid", 8, 32);
+		valid = valid && checkLength(guid, "guid", 8, 45);
 		valid = valid && checkRegexp(fname, /^[a-zA-Z]*$/, "firstname can consist of a-z only");
 		valid = valid && checkRegexp(lname, /^[a-zA-Z]*$/, "lastname can consist of a-z only");
-		valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
+		//valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
 
 
 		function checkLength(o, n, min, max) {
@@ -66,16 +66,24 @@ $(document).ready(function () {
 
 		if (valid) {
 
-			window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
-			window.runtime.runtime.checkGUID(guid.val());
-			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *User \"' + fname.val() + '\" is added</span>');
+			let success = window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
+			if (success ){
+				checkGUIDRuntime(guid.val());
+				$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *User \"' + fname.val() + '\" is added</span>');
 
-			getAllContacts();
+				getAllContacts();
 
-			$.fancybox({
-				type: "html",
-				content: "<p class=" + "title0" + "> contact was successfully added </p>"
-			});
+				$.fancybox({
+					type: "html",
+					content: "<p class=" + "title0" + "> contact was successfully added </p>"
+				});
+			}else{
+				$.fancybox({
+					type: "html",
+					content: "<p class=" + "title0" + "> contact was Not added </p>"
+				});
+			}
+
 		} else {
 			$.fancybox.hideLoading();
 			$(".add_contact").trigger("click");
@@ -317,8 +325,6 @@ function checkGUIDRuntime(guid) {
 		function(foundContacts,b) {
 
 			console.info(foundContacts);
-			console.info(b);
-			console.log('@@ Recrevived message from ' + event.data.to);
 			let DirectContact = foundContacts[0];
 			let FoF = foundContacts[1];
 
