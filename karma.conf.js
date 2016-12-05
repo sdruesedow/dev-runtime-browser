@@ -12,11 +12,12 @@ module.exports = function(config) {
 		frameworks: [ 'mocha', 'browserify'],
 
 		files: [
-			'test/**/RuntimeLoader.spec.js',
-			'test/**/RuntimeUAStub.spec.js',
-			'test/**/StorageManager.spec.js'
+			'test/**/*.spec.js',
 		],
 
+		exclude: [
+			'test/**/Sandbox*.spec.js',
+		],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
