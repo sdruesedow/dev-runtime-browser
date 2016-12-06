@@ -1,69 +1,63 @@
-/**
-* Copyright 2016 PT Inovação e Sistemas SA
-* Copyright 2016 INESC-ID
-* Copyright 2016 QUOBIS NETWORKS SL
-* Copyright 2016 FRAUNHOFER-GESELLSCHAFT ZUR FOERDERUNG DER ANGEWANDTEN FORSCHUNG E.V
-* Copyright 2016 ORANGE SA
-* Copyright 2016 Deutsche Telekom AG
-* Copyright 2016 Apizee
-* Copyright 2016 TECHNISCHE UNIVERSITAT BERLIN
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-**/
-import PersistenceManager from 'service-framework/dist/PersistenceManager'
-import SandboxWorker from './SandboxWorker'
-import SandboxApp from './SandboxApp'
-import Request from './Request'
-import storageManager from 'service-framework/dist/StorageManager'
-import Dexie from 'dexie'
-import { RuntimeCatalogue } from 'service-framework/dist/RuntimeCatalogue'
+import SandboxWorker from './SandboxWorker';
+import SandboxApp from './SandboxApp';
+import Request from './Request';
+import {RuntimeCatalogue} from 'service-framework/dist/RuntimeCatalogue';
+import PersistenceManager from 'service-framework/dist/PersistenceManager';
+import StorageManager from 'service-framework/dist/StorageManager';
 
-const RuntimeFactory = Object.create({
-	createSandbox() {
-		return new SandboxWorker('./context-service.js')
-	},
+import RuntimeCapabilities from './RuntimeCapabilities';
 
-	createAppSandbox() {
-		return new SandboxApp()
-	},
+// import StorageManagerFake from './StorageManagerFake';
 
-	createHttpRequest() {
-		let request = new Request()
-		return request
-	},
+import Dexie from 'dexie';
 
-	createRuntimeCatalogue() {
-		if (!this.catalogue)
-			this.catalogue = new RuntimeCatalogue(this)
+const runtimeFactory = Object.create({
+  createSandbox() {
+    return new SandboxWorker('./context-service.js')
+  },
 
-		return this.catalogue
-	},
+  createAppSandbox() {
+    return new SandboxApp()
+  },
 
-	atob(b64) {
-		return atob(b64)
-	},
+  createHttpRequest() {
+    let request = new Request();
+    return request;
+  },
 
-	persistenceManager() {
-		let localStorage = window.localStorage
-		return new PersistenceManager(localStorage)
-	},
+  atob(b64) {
+    return atob(b64);
+  },
 
-	storageManager() {
-		const db = new Dexie('cache')
-		const storeName = 'objects'
+  storageManager() {
+    // Using the implementation of Service Framework
+    // Dexie is the IndexDB Wrapper
+    const db = new Dexie('cache');
+    const storeName = 'objects';
 
-		return new storageManager(db, storeName)
-	}
-})
+    return new StorageManager(db, storeName);
 
-export default RuntimeFactory
+    // return new StorageManagerFake('a', 'b');
+  },
+
+  persistenceManager() {
+    let localStorage = window.localStorage;
+    return new PersistenceManager(localStorage);
+  },
+
+  createRuntimeCatalogue(development) {
+
+    if (!this.catalogue)
+      this.catalogue = new RuntimeCatalogue(this);
+
+    return this.catalogue;
+  },
+
+  runtimeCapabilities(storageManager) {
+    console.log('using runtime Capabilities');
+    return new RuntimeCapabilities(storageManager);
+  }
+
+});
+
+export default runtimeFactory;
