@@ -238,7 +238,7 @@ function get_owner_information() {
 
 	} else {
 		globalOwnerDetails = result;
-		var html = "<table class='table table-hover'><tr>" +
+		let html = "<table class='table table-hover'><tr>" +
 			"<td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;'> Firstname : </span></b></td>" +
 			"<td> " + result._firstName + " </td>" +
 			"<tr><td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;'>Lastname : </span> </b></td>" +
@@ -307,7 +307,29 @@ function send_global_registry_record() {
 
 	} else {
 		console.log(result);
-		window.runtime.runtime.sendGlobalRegistryRecord(result);
+
+		let checkPromise = new Promise(
+			function(resolve, reject) {
+				resolve(window.runtime.runtime.sendGlobalRegistryRecord(result));
+			});
+
+		checkPromise.then(
+			function(result) {
+				console.log("send #########");
+				console.log(result)
+				console.log("send #########");
+				if(result == 200){
+					$.fancybox({
+						type: "html",
+						content: "<p class=" + "title0" + ">  Global Registry Record successfully sent </p>"
+					});
+				}else{
+					$.fancybox({
+						type: "html",
+						content: "<p class=" + "title0" + ">  Error code: "+ result +"  </p>"
+					});
+				}
+			});
 	}
 }
 
@@ -316,7 +338,7 @@ function send_global_registry_record() {
 function checkGUIDRuntime(guid) {
 
 
-	var checkPromise = new Promise(
+	let checkPromise = new Promise(
 		function(resolve, reject) {
 			resolve(window.runtime.runtime.checkGUID(guid));
 		});
