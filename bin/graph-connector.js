@@ -98,7 +98,7 @@ $(document).ready(function () {
 //creating friendlist for GraphConnector array, no local array
 function createFriendListGC(obj1, index) {
 	sortFriendsGC(obj1);
-	obj = obj1;
+	//obj = obj1;
 	if (obj1.length !== 0) {
 		let table = '<table class="table table-hover" id="mytable">';
 		let i = index;
