@@ -39,35 +39,35 @@ let runtimeAdapter = {
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:loadedHyperty'){
-                    window.removeEventListener('message', loaded);
+                    iframe.port.removeEventListener('message', loaded);
                     resolve(buildMsg(app.getHyperty(e.data.body.runtimeHypertyURL), e.data));
                 }
             };
-            window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'core:loadHyperty', body:{descriptor: hypertyDescriptor}}, '*');
+            iframe.port.addEventListener('message', loaded);
+            iframe.port.postMessage({to:'core:loadHyperty', body:{descriptor: hypertyDescriptor}});
         });
     },
 
     requireProtostub: (domain)=>{
-        iframe.contentWindow.postMessage({to:'core:loadStub', body:{"domain": domain}}, '*')
+        iframe.port.postMessage({to:'core:loadStub', body:{"domain": domain}})
     },
 
     close: ()=>{
         return new Promise((resolve, reject)=>{
             let loaded = (e)=>{
                 if(e.data.to === 'runtime:runtimeClosed'){
-                    window.removeEventListener('message', loaded);
+                    iframe.port.removeEventListener('message', loaded);
                     resolve(resolve(e.data.body));
                 }
             };
-            window.addEventListener('message', loaded);
-            iframe.contentWindow.postMessage({to:'core:close', body:{}}, '*')
+            iframe.port.addEventListener('message', loaded);
+            iframe.port.postMessage({to:'core:close', body:{}})
         })
     },
 };
 
 let GuiManager = function(){
-  window.addEventListener('message', (e) => {
+  iframe.port.addEventListener('message', (e) => {
     if(e.data.to === 'runtime:gui-manager') {
 
       if (e.data.body.method === 'showAdminPage') {
@@ -88,16 +88,20 @@ let RethinkBrowser = {
     install: function({domain, runtimeURL, development}={}){
         return new Promise((resolve, reject)=>{
             let runtime = this._getRuntime(runtimeURL, domain, development)
-            iframe = createIframe(`https://${runtime.domain}/.well-known/runtime/index.html?runtime=${runtime.url}&development=${development}`);
-            let installed = (e)=>{
+            //iframe = createIframe(`https://${runtime.domain}/.well-known/runtime/index.html?runtime=${runtime.url}&development=${development}`);
+            let url = `https://${runtime.domain}/.well-known/runtime/core.js?runtime=${runtime.url}&development=${development}`
+			console.log(url)
+			iframe = new SharedWorker(url)
+			iframe.port.start()
+			let installed = (e)=>{
                 if(e.data.to === 'runtime:installed'){
-                    window.removeEventListener('message', installed);
-                    resolve(runtimeAdapter);
+                    iframe.port.removeEventListener('message', installed)
+                    resolve(runtimeAdapter)
                 }
             };
-            window.addEventListener('message', installed);
-            app.create(iframe);
-            GuiManager()
+            iframe.port.addEventListener('message', installed)
+            //app.create(iframe);
+            //GuiManager()
         });
     },
 

@@ -28,7 +28,7 @@ export default class SandboxApp extends Sandbox{
      super();
 
      this.type = SandboxType.NORMAL;
-     window.addEventListener('message', function(e){
+     self.addEventListener('message', function(e){
          if(!!!this.origin)
             this.origin = e.source;
 
@@ -38,7 +38,7 @@ export default class SandboxApp extends Sandbox{
          this._onMessage(JSON.parse(JSON.stringify(e.data)));
      }.bind(this));
 
-     window.addEventListener('error', function(error){
+     self.addEventListener('error', function(error){
        console.error('[SANDBOX APP] - Error', error);
        throw error;
      }.bind(this));
