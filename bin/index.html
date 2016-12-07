@@ -105,9 +105,13 @@
 			$("#right-div").html(html);
 
 		} else {
-			$("#right-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"All the contacts have been deleted\"</b></h4> ");
-			$("#message_lbl").html('<h4 ><span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> *All the contacts have been deleted</span></h4>');
-		}
+			if(obj.length !=0) {
+					$("#right-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"Contact was not found, Please search with different keyword\"</b></h4> ");
+				} else {
+					$("#right-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"All the contacts have been deleted\"</b></h4> ");
+					$("#message_lbl").html('<h4 ><span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> *All the contacts have been deleted</span></h4>');
+				}
+			}
 	}
 
 	function useGUID() {
@@ -129,39 +133,36 @@
 					resolve( window.runtime.runtime.getContact(name));
 				});
 
-		getContactPromise.then(
-				function(body) {
-					console.log(body);
-					let userFirstName = body.firstName;
-					let userLastName = body.lastName;
-					$('.testResult').append("<h3>The user's firstName is <u>" + userFirstName + "<h3></u> and Last Name is <u>" + userLastName + "</u></h3>");
+				getContactPromise.then(
+						function(body) {
+						console.log(body);
 
+						let tempObj = [];
+						let index = 0;
+						let userList = body;
+
+						if (name == "") {
+							getAllContacts();
+						} else if (body.length == 0) {
+							$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *No such contact with name \"' + name + '\" </span>');
+							createFriendListGC(tempObj, 0);
+							detailsGC(tempObj, 0);
+						} else {
+							for (let i = 0; i < userList.length; i++) {
+								console.log('In AddressBook: Found a contact with name' + userList[i].firstName);
+								tempObj.push(userList[i]);
+								index = i;
+							}
+							if (tempObj.length == 0) {
+								$('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
+								$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *No Such contact with name \"' + name + '\"</span>');
+							} else {
+								$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *Found  \"' + tempObj.length + '\" contacts</span>');
+								createFriendListGC(tempObj, 0);
+								detailsGC(tempObj, 0);
+							}
+						}
 				});
-
-		let tempObj = [];
-		let index = 0;
-		let userList = body.userList;
-		let userExist = body.found;
-
-		if (name == "") {
-			getAllContacts();
-		} else if (!userExist) {
-			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *No such contact with name \"' + name + '\" </span>');
-		} else {
-			for (let i = 0; i < userList.length; i++) {
-				console.log('In AddressBook: Found a contact with name' + userList[i]._firstName);
-				tempObj.push(userList[i]);
-				index = i;
-			}
-			if (tempObj.length == 0) {
-				$('#left-div').html("<h3 align='center'> <b>No such contact with name </b> \"" + name + "\"</h3>");
-				$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *No Such contact with name \"' + name + '\"</span>');
-			} else {
-				$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *Found  \"' + tempObj.length + '\" contacts</span>');
-				createFriendListGC(tempObj, 0);
-				detailsGC(tempObj, 0);
-			}
-		}
 	}
 
 

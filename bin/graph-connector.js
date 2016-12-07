@@ -109,7 +109,11 @@ function createFriendListGC(obj1, index) {
 		table += '</table>';
 		$("#left-div").html(table);
 	} else {
-		$("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file, please upload another file\"</b></h4> ");
+		if(obj.length !=0) {
+			$("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contact found, please try with other keyword\"</b></h4> ");
+		} else {
+			$("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file, please upload another file\"</b></h4> ");
+		}
 	}
 }
 //sorting for GraphConnector array, no local array
