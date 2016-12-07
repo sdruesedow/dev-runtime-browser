@@ -34,7 +34,8 @@
     "jspm": "0.16.48",
     "runtime-core": "git+https://github.com/reTHINK-project/dev-runtime-core.git#develop",
     "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#develop",
-    "urijs": "1.18.4"
+    "urijs": "1.18.4",
+    "rx": "4.1.0"
   },
   "devDependencies": {
     "array.observe": "0.0.1",
