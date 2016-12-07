@@ -210,13 +210,20 @@ $(document).ready(function () {
 				} else {
 					console.log("result of queryGlobalRegistry");
 					console.log(result);
-					contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
-					for (var i = 0; i < result._userIDs.length; i++) {
-						contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
+					if(guid == ownerguid) {
+						contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> This is your account with " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>You have User IDs:</h3>";
+						for (var i = 0; i < result._userIDs.length; i++) {
+							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
+						}
+						contentHTML += "</p>";
+					} else {
+						contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
+						for (var i = 0; i < result._userIDs.length; i++) {
+							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
+						}
+						contentHTML += "</p>";
+						checkGUIDRuntime(result._guid);
 					}
-					contentHTML += "</p>";
-
-					checkGUIDRuntime(result._guid);
 
 					console.info(obj);
 					$.fancybox({
@@ -323,6 +330,7 @@ function send_global_registry_record() {
 				console.log(result)
 				console.log("send #########");
 				if(result == 200){
+					ownerguid = globalOwnerDetails._guid;
 					$.fancybox({
 						type: "html",
 						content: "<p class=" + "title0" + ">  Global Registry Record successfully sent </p>"
