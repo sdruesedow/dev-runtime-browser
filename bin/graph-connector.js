@@ -66,23 +66,34 @@ $(document).ready(function () {
 
 		if (valid) {
 
-			let success = window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
-			if (success ){
-				checkGUIDRuntime(guid.val());
-				$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *User \"' + fname.val() + '\" is added</span>');
-
-				getAllContacts();
-
-				$.fancybox({
-					type: "html",
-					content: "<p class=" + "title0" + "> contact was successfully added </p>"
+			let checkPromise22 = new Promise(
+				function(resolve, reject) {
+					resolve(window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val()));
 				});
-			}else{
-				$.fancybox({
-					type: "html",
-					content: "<p class=" + "title0" + "> contact was Not added </p>"
+
+			checkPromise22.then(
+				function(success) {
+
+					if (success ){
+						checkGUIDRuntime(guid.val());
+						$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *User \"' + fname.val() + '\" is added</span>');
+
+						getAllContacts();
+
+						$.fancybox({
+							type: "html",
+							content: "<p class=" + "title0" + "> contact was successfully added </p>"
+						});
+					}else{
+						$.fancybox({
+							type: "html",
+							content: "<p class=" + "title0" + "> contact was Not added </p>"
+						});
+					}
 				});
-			}
+
+			//let success = window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
+
 
 		} else {
 			$.fancybox.hideLoading();
