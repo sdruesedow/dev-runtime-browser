@@ -40,7 +40,7 @@ $(document).ready(function () {
 		valid = valid && checkLength(guid, "guid", 8, 45);
 		valid = valid && checkRegexp(fname, /^[a-zA-Z]*$/, "firstname can consist of a-z only");
 		valid = valid && checkRegexp(lname, /^[a-zA-Z]*$/, "lastname can consist of a-z only");
-		//valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
+		valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
 
 
 		function checkLength(o, n, min, max) {
@@ -67,15 +67,15 @@ $(document).ready(function () {
 		if (valid) {
 
 			let checkPromise22 = new Promise(
-				function(resolve, reject) {
+				function (resolve, reject) {
 					resolve(window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val()));
 				});
 
 			checkPromise22.then(
-				function(success) {
+				function (success) {
+					console.log(success);
+					if (success) {
 
-					if (success ){
-						checkGUIDRuntime(guid.val());
 						$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> *User \"' + fname.val() + '\" is added</span>');
 
 						getAllContacts();
@@ -84,17 +84,14 @@ $(document).ready(function () {
 							type: "html",
 							content: "<p class=" + "title0" + "> contact was successfully added </p>"
 						});
-					}else{
+
+					} else {
 						$.fancybox({
 							type: "html",
 							content: "<p class=" + "title0" + "> contact was Not added </p>"
 						});
 					}
 				});
-
-			//let success = window.runtime.runtime.addContact(guid.val(), fname.val(), lname.val());
-
-
 		} else {
 			$.fancybox.hideLoading();
 			$(".add_contact").trigger("click");
@@ -120,7 +117,7 @@ function createFriendListGC(obj1, index) {
 		table += '</table>';
 		$("#left-div").html(table);
 	} else {
-		if(obj.length !=0) {
+		if (obj.length != 0) {
 			$("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contact found, please try with other keyword\"</b></h4> ");
 		} else {
 			$("#left-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"No contacts in the imported file, please upload another file\"</b></h4> ");
@@ -206,12 +203,12 @@ $(document).ready(function () {
 		console.log(" queryGlobalRegistry");
 
 		var p1 = new Promise(
-			function(resolve, reject) {
+			function (resolve, reject) {
 				resolve(window.runtime.runtime.queryGlobalRegistry(guid));
 			});
 
 		p1.then(
-			function(result) {
+			function (result) {
 				if (result === 'GUID not found') {
 					$.fancybox({
 						type: "html",
@@ -221,16 +218,16 @@ $(document).ready(function () {
 				} else {
 					console.log("result of queryGlobalRegistry");
 					console.log(result);
-					if(guid == ownerguid) {
+					if (guid == ownerguid) {
 						contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> This is your account with " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>You have User IDs:</h3>";
 						for (var i = 0; i < result._userIDs.length; i++) {
-							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
+							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid + " " + result._userIDs[i].domain + "</b><br>";
 						}
 						contentHTML += "</p>";
 					} else {
 						contentHTML = "<p class=" + "title0" + "><h3><span class='glyphicon glyphicon-user' aria-hidden='true'></span> Found details of contact: " + "</h3> <br>  GUID: <b>\"" + result._guid + "\"</b> <br> <h3>User IDs found:</h3>";
 						for (var i = 0; i < result._userIDs.length; i++) {
-							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid +" "+result._userIDs[i].domain +"</b><br>";
+							contentHTML += "<br><span class='glyphicon glyphicon-tags' aria-hidden='true'></span><b>" + result._userIDs[i].uid + " " + result._userIDs[i].domain + "</b><br>";
 						}
 						contentHTML += "</p>";
 						checkGUIDRuntime(result._guid);
@@ -331,25 +328,25 @@ function send_global_registry_record() {
 		console.log(result);
 
 		let checkPromise = new Promise(
-			function(resolve, reject) {
+			function (resolve, reject) {
 				resolve(window.runtime.runtime.sendGlobalRegistryRecord(result));
 			});
 
 		checkPromise.then(
-			function(result) {
+			function (result) {
 				console.log("send #########");
 				console.log(result)
 				console.log("send #########");
-				if(result == 200){
+				if (result == 200) {
 					ownerguid = globalOwnerDetails._guid;
 					$.fancybox({
 						type: "html",
 						content: "<p class=" + "title0" + ">  Global Registry Record successfully sent </p>"
 					});
-				}else{
+				} else {
 					$.fancybox({
 						type: "html",
-						content: "<p class=" + "title0" + ">  Error code: "+ result +"  </p>"
+						content: "<p class=" + "title0" + ">  Error code: " + result + "  </p>"
 					});
 				}
 			});
@@ -357,26 +354,25 @@ function send_global_registry_record() {
 }
 
 
-
 function checkGUIDRuntime(guid) {
 
 
 	let checkPromise = new Promise(
-		function(resolve, reject) {
+		function (resolve, reject) {
 			resolve(window.runtime.runtime.checkGUID(guid));
 		});
 
 	checkPromise.then(
-		function(foundContacts) {
+		function (foundContacts) {
 
 			console.info(foundContacts);
 			let DirectContact = foundContacts[0];
 			let FoF = foundContacts[1];
 
-			if (DirectContact.length !== 0 || FoF.length !== 0  ) {
+			if (DirectContact.length !== 0 || FoF.length !== 0) {
 				console.log('FoF : ' + FoF);
 				console.log(' DirectContact : ' + DirectContact);
-				if ( FoF.length !== 0) {
+				if (FoF.length !== 0) {
 					console.log('AddressBook Log: Found Mutual Friend');
 					console.info(FoF);
 					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span> Found Mutual Contact: <b><u>\"" + FoF[0]._firstName + "\"</u> with GUID: <u>\"" + FoF[0]._guid + "\"</u></b></h3><br>";

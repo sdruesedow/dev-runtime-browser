@@ -206,10 +206,12 @@
 	function getAllContacts() {
 
 		let allContacts = window.runtime.runtime.getAllContacts();
+
 		if (allContacts == null) {
 			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> * Contact List is empty, Please add your contacts </span>');
 		} else {
 			$("#message_lbl").html('<span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-success"> * You have ' + allContacts.length + ' contacts </span>');
+
 			console.info(allContacts);
 			createFriendListGC(allContacts, 0);
 			obj = allContacts;
@@ -544,9 +546,7 @@
 								<span class="sr-only"></span>
 							</button>
 							<ul class="dropdown-menu" style="border: 1px solid black;">
-								<li><a class="btn btn-default" onclick="seeding()"><b><span
-										class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>seeding</b></a>
-								</li>
+
 								<li><a class="btn btn-default" onclick="get_owner_information()"><b><span
 										class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Get my
 									information</b></a>
