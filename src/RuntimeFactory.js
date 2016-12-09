@@ -23,12 +23,17 @@
 import PersistenceManager from 'service-framework/dist/PersistenceManager'
 import SandboxWorker from './SandboxWorker'
 import SandboxApp from './SandboxApp'
+import SandboxWindow from './SandboxWindow'
 import Request from './Request'
 import storageManager from 'service-framework/dist/StorageManager'
 import Dexie from 'dexie'
 import { RuntimeCatalogue } from 'service-framework/dist/RuntimeCatalogue'
 
 const RuntimeFactory = Object.create({
+	createSandboxWindow() {
+		return new SandboxWindow()
+	},
+
 	createSandbox() {
 		return new SandboxWorker('./context-service.js')
 	},
