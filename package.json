@@ -65,6 +65,6 @@
     "urijs": "^1.17.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.4.0",
+    "watchify": "^3.4.0"
   }
 }
