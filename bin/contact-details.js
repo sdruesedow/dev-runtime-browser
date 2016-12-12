@@ -58,6 +58,29 @@ function details(j) {
 	}
 }
 
+function detailsOwner(j) {
+console.log("Owner Details");
+	if (globalOwnerDetails.length !== 0) {
+
+		var html = "<table class='table table-hover'><tr>" +
+			"<td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;' class='label label-info'> Firstname : </span></b></td>" +
+			"<td><input class='form-control' style='font-weight:bold; background:lightgrey;' type='text' placeholder='Enter First Name' value='" + globalOwnerDetails._firstName + "' readonly/></td>" +
+			"<td><button class='btn btn-info' disabled>Edit</button></td>" +
+			"<tr><td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;' class='label label-info'>Lastname : </span> </b></td>" +
+			"<td><input class='form-control' type='text' style='font-weight:bold; background:lightgrey;' placeholder='Enter Last Name' value='" + globalOwnerDetails._lastName+ "' readonly/></span></td>" +
+			"<td><button class='btn btn-info' disabled>Edit</button></td></tr>" +
+			"<tr><td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;' class='label label-info'> GUID : </span> </b></td>" +
+			"<td><input class='form-control' type='text' placeholder='Enter GUID' style='font-weight:bold; background:lightgrey;' value='" + globalOwnerDetails._guid + "' readonly/></span></td>" +
+			"<td><button class='btn btn-info' disabled>Edit</button></td></tr></table>";
+
+		$("#right-div").html(html);
+
+	} else {
+		$("#right-div").html("<br><br><br><h3 align='center' style='color:red;'><b>\"All the contacts have been deleted\"</b></h4> ");
+		$("#message_lbl").html('<h4 ><span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;" class="label label-danger"> *All the contacts have been deleted</span></h4>');
+	}
+}
+
 function editPrivacy(j, status) {
 	let guid = obj[j]._guid;
 

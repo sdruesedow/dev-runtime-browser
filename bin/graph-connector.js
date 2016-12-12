@@ -111,7 +111,11 @@ function createFriendListGC(obj1, index) {
 		let table = '<table class="table table-hover" id="mytable">';
 		let i = index;
 		$.each(obj1, function () {
-			table += '<tr><td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="button" aria-pressed="false" autocomplete="off" id="button' + i + '" onclick=details(' + i + ')><b>' + this['_firstName'] + '\t' + this['_lastName'] + '</b></button></td></tr>';
+			if(obj1._guid = ownerguid) {
+				table += '<tr><td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="button" aria-pressed="false" autocomplete="off" id="button' + i + '" onclick=detailsOwner()><b>' + this['_firstName'] + '\t' + this['_lastName'] + '</b></button></td></tr>';
+			} else {
+				table += '<tr><td><button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="button" aria-pressed="false" autocomplete="off" id="button' + i + '" onclick=details(' + i + ')><b>' + this['_firstName'] + '\t' + this['_lastName'] + '</b></button></td></tr>';
+			}
 			i++;
 		});
 		table += '</table>';
