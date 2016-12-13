@@ -59,6 +59,9 @@
 		$('#login').html('<div class="container">' + '<!-- Trigger the modal with a button -->' + '' + '<!-- Modal -->' + '<div class="modal fade" id="myLogin" role="dialog">' + '<div class="modal-dialog">' + '<!-- Modal content-->' + '<div class="modal-content" align="left">' + '<div class="modal-header">' + '<button type="button" class="close" data-dismiss="modal">&times;</button>' + '<h4 class="modal-title"><b>Login using Mnemonic</b></h4>' + '</div>' + '<div class="modal-body">' + '<label align="left">Please enter your 16 word mnemonic</label>' + '<input name="seed" type="text" id="seed" style=" width: 500px;" placeholder="Enter mnemonic..."/>' + '</div>' + '<div class="modal-footer">' + '<button type="button" class="btn btn-default" onclick=useGUID() data-dismiss="modal" >login</button><button type="button" class="btn btn-default" data-dismiss="modal">close</button>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>');
 	});
 
+	function removeMaterialize() {
+		$('link[rel=stylesheet][href~="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css"]').remove();
+	}
 
 	function createDialog(title, text, options) {
 		return $("<div class='dialog' style='text-align: center;' title='" + title + "'><p>Write down these words to login with the same GUID later. Do not give your private mnemonic to anyone else.</p><br\><strong>" + text + "</strong></div>").dialog(options);
@@ -285,7 +288,7 @@
 					<button class="identities-page-show btn-flat">Identities</button>
 				</div>
 				<div class="col s4">
-					<button class="graphConnector-page-show btn-flat">Graph Connector</button>
+					<button class="graphConnector-page-show btn-flat" onclick="removeMaterialize()">Graph Connector</button>
 				</div>
 				<div class="col s4">
 					<button class="admin-page-exit btn-flat">Exit<i class="medium material-icons right">exit_to_app</i>
