@@ -403,3 +403,7 @@ function checkGUIDRuntime(guid) {
 		});
 
 }
+
+function setStore(){
+	window.runtime.runtime.storeGraphConnector();
+}
