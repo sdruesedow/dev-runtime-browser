@@ -24,6 +24,7 @@ import PersistenceManager from 'service-framework/dist/PersistenceManager'
 import SandboxWorker from './SandboxWorker'
 import SandboxApp from './SandboxApp'
 import Request from './Request'
+import RuntimeCapabilities from './RuntimeCapabilities'
 import storageManager from 'service-framework/dist/StorageManager'
 import Dexie from 'dexie'
 import { RuntimeCatalogue } from 'service-framework/dist/RuntimeCatalogue'
@@ -63,6 +64,10 @@ const RuntimeFactory = Object.create({
 		const storeName = 'objects'
 
 		return new storageManager(db, storeName)
+	},
+
+	runtimeCapabilities(storageManager) {
+		return new RuntimeCapabilities(storageManager)
 	}
 })
 
