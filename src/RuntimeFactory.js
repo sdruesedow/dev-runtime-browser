@@ -29,9 +29,7 @@ import Dexie from 'dexie'
 import { RuntimeCatalogue } from 'service-framework/dist/RuntimeCatalogue'
 
 const RuntimeFactory = Object.create({
-
-	createSandbox(){
-
+	createSandbox() {
 		return new SandboxWorker('./context-service.js')
 	},
 
@@ -66,7 +64,6 @@ const RuntimeFactory = Object.create({
 
 		return new storageManager(db, storeName)
 	}
-
 })
 
 export default RuntimeFactory

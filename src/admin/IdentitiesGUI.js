@@ -77,7 +77,7 @@ class IdentitiesGUI {
       }
 
       $('.policies-section').addClass('hide');
-	  $('.graphConnector-section').addClass('hide');
+      $('.graphConnector-section').addClass('hide');
       $('.identities-section').removeClass('hide');
 
       _this.showMyIdentities(identityInfo.identities, toRemoveID).then((identity) => {
