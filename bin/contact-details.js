@@ -21,9 +21,9 @@ function details(j) {
 			"<tr><td><b><span style='font-family:Arial;font-size:18px;font-weight:bold;color:black;' class='label label-info'> Private Contact: </span> </b></td><td>";
 
 		if (obj[j]._privateContact == 'true' || obj[j]._privateContact == true) {
-			html = html + "<label class='radio-inline'><input type='radio' name='privacy' onClick='editPrivacy(" + j + ", true)' checked><u>Yes</u></label><label class='radio-inline'><input type='radio' name='privacy' onClick='editPrivacy(" + j + ", false)'>No</label>";
+			html = html + "<label class='radio-inline'><input type='radio' style='all:unset;' name='privacy' onClick='editPrivacy(" + j + ", true)' checked><u>Yes</u></label><label class='radio-inline'><input type='radio' style='all:unset;' name='privacy' onClick='editPrivacy(" + j + ", false)'>No</label>";
 		} else {
-			html = html + "<label class='radio-inline'><input type='radio' name='privacy' onClick='editPrivacy(" + j + ", true)' >Yes</label><label class='radio-inline'><input type='radio' name='privacy' onClick='editPrivacy(" + j + ", false)' checked><u>No</u></label>";
+			html = html + "<label class='radio-inline'><input type='radio' style='all:unset;' name='privacy' onClick='editPrivacy(" + j + ", true)' >Yes</label><label class='radio-inline'><input type='radio' style='all:unset;' name='privacy' onClick='editPrivacy(" + j + ", false)' checked><u>No</u></label>";
 		}
 		html = html + "<tr><td></td><td>";
 		html = html + '<div class="dropdown open">' +
