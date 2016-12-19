@@ -405,14 +405,14 @@
 			<form method="post" id="add_contact" title="Add new contact" name="add_contact" action=""
 				  autocomplete="off">
 
-				<p class="validateTips">All form fields are required.</p>
-				<label>First Name</label>
+				<p class="validateTips" style="font-size:20px">All form fields are required.</p>
+				<label style="font-size:18px">First Name</label>
 				<input name="fname" type="text" id="fname" class="text ui-widget-content ui-corner-all"/>
 				<p>&nbsp;</p>
-				<label>Last Name</label>
+				<label style="font-size:18px">Last Name</label>
 				<input name="lname" type="text" id="lname" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
-				<label for="guid">GUID</label>
+				<label for="guid" style="font-size:18px">GUID</label>
 				<input name="guid" type="text" id="guid" class="text ui-widget-content ui-corner-all"/>
 				<!-- Allow form submission with keyboard without duplicating the dialog button -->
 
@@ -426,7 +426,7 @@
 
 
 				<p>&nbsp;</p>
-				<label>Group name</label>
+				<label style="font-size:18px">Group name</label>
 				<input name="group_name" type="text" id="group_name" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
@@ -438,12 +438,12 @@
 			<form method="post" id="add_user_id_form" name="add_user_id_form" action="" autocomplete="off">
 
 				<p>&nbsp;</p>
-				<label>Uid</label>
+				<label style="font-size:18px">Uid</label>
 				<input name="uid" type="text" id="uid" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
 				<p>&nbsp;</p>
-				<label>Domain</label>
+				<label style="font-size:18px">Domain</label>
 				<input name="domain" type="text" id="domain" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
@@ -455,17 +455,17 @@
 			<form method="post" id="set_defaults_form" name="set_defaults_form" action="" autocomplete="off">
 
 				<p>&nbsp;</p>
-				<label>Voice</label>
+				<label style="font-size:18px">Voice</label>
 				<input name="voice" type="text" id="voice" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
 				<p>&nbsp;</p>
-				<label>Chat</label>
+				<label style="font-size:18px">Chat</label>
 				<input name="chat" type="text" id="chat" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
 				<p>&nbsp;</p>
-				<label>Video</label>
+				<label style="font-size:18px">Video</label>
 				<input name="video" type="text" id="video" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
@@ -479,7 +479,7 @@
 				  autocomplete="off">
 
 				<p>&nbsp;</p>
-				<label>GUID</label>
+				<label style="font-size:18px">GUID</label>
 				<input name="query_guid" type="text" id="query_guid" class="text ui-widget-content ui-corner-all"/><br>
 				<p>&nbsp;</p>
 
@@ -514,7 +514,7 @@
 					<!-- Row2: Add Contact button -->
 					<div class="col-sm-2" style="padding-top: 2px;">
 						<button class="btn btn-info" id="add_contact_button" href="#add_contact"
-								style="height:33px; color:white; width:145px "><span class="glyphicon glyphicon-plus"
+								style="height:35px; color:white; width:170px "><span class="glyphicon glyphicon-plus"
 																					 aria-hidden="true"><span
 								class="glyphicon glyphicon-user" aria-hidden="true"></span></span> Add a contact
 						</button>
@@ -522,7 +522,7 @@
 					<!-- Row4: Generate split button-->
 					<div id="search_div" class="col-sm-2" style="padding-top: 2px">
 						<div class="btn-group">
-							<button type="button" style="width:145px;" class="btn btn-success dropdown-toggle"
+							<button type="button" style="height:35px;width:150px;" class="btn btn-success dropdown-toggle"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 									title="Please select the option from the dropdown">
 								<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span> Query <span
@@ -540,7 +540,7 @@
 					<!-- Row5: Account split button-->
 					<div id="add_new_div" class="col-sm-2" style="padding-bottom: 2px">
 						<div class="dropdown">
-							<button type="button" style="width:145px;" class="btn btn-danger dropdown-toggle"
+							<button type="button" style="height:35px;width:150px;" class="btn btn-danger dropdown-toggle"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
 									title="Please select the option from the dropdown"><span
 									class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
@@ -549,7 +549,7 @@
 							</button>
 							<ul class="dropdown-menu" style="border: 1px solid black;">
 								<li><a class="btn btn-default" onclick="setStore()"><b><span
-										class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>store</b></a>
+										class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Store</b></a>
 								</li>
 								<li><a class="btn btn-default" onclick="get_owner_information()"><b><span
 										class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>Get my
@@ -585,13 +585,13 @@
 					<!--Row2: search button and Box -->
 					<div class="col-sm-3" align="right">
 						<div class="input-group" style="padding-top: 2px;">
-							<input type="text" class="form-control" style="height:30px;" placeholder="Filter contacts"
+							<input type="text" class="form-control" style="font-size:18px;height:35px;width:150px;" placeholder="Filter contacts"
 								   id="searchBox">
 							<span class="input-group-btn">
-                      <button class="btn btn-primary" style="height:30px; width:50px; color:white;" type="button"
+                      <button class="btn btn-primary" style="height:35px; width:50px; color:white;" type="button"
 							  id="searchBtn" onclick="search_friend()"><span class="glyphicon glyphicon-search"
 																			 aria-hidden="true"></span> </button> &nbsp;
-                       <button class="btn btn-success" style="height:30px; width:120px; color:white;" type="button"
+                       <button class="btn btn-success" style="height:35px; width:150px; color:white;" type="button"
 							   id="get_all" onclick="getAllContacts()"><span class="glyphicon glyphicon-flash"
 																			 aria-hidden="true"></span>All Contacts</button>
                     </span>
@@ -624,7 +624,7 @@
 							 style="overflow: auto; height: 500px; border: 4px solid maroon"><h2>
                     <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;"
 						  class="label label-info"> Please import contacts using the import button</span></h2><img
-								src="/importContacts.jpeg" alt="Contact import">
+								src="importContacts.jpeg" alt="Contact import">
 						</div>
 					</div>
 					<div class="col-sm-6">
@@ -636,7 +636,7 @@
 							 style="overflow: auto; height: 500px;border: 4px solid maroon"><h2>
                     <span style="font-family:Verdana;font-size:12px;font-weight:bold;color:black;"
 						  class="label label-info"> Please import contacts using the import button</span></h2><img
-								src="/contact-det.jpeg" alt="Contact Details">
+								src="contact-det.jpeg" alt="Contact Details">
 						</div>
 					</div>
 				</div>

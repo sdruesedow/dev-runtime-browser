@@ -66,7 +66,7 @@ function remove_user_id() {
         html += '<form name="removeForm" >';
         for (let i = 0; i < ownerUserIDs.length; i++) {
             html += '<div class="radio"><input type="radio" name="userIDsBtn" /></div>';
-            html += '<div class="radio"><label><input type="radio" style="all:unset;" onClick="enableRemoveUserIDBtn()" name="userIDsBtn" value=' + ownerUserIDs[i].uid + ',' + ownerUserIDs[i].domain + '><u><b>Uid: </b></u>' + ownerUserIDs[i].uid + ' <u><b>Domain: </b></u>' + ownerUserIDs[i].domain + '</label></div>';
+            html += '<div class="radio"><label style="font-size:18px"><input type="radio" style="all:unset;" onClick="enableRemoveUserIDBtn()" name="userIDsBtn" value=' + ownerUserIDs[i].uid + ',' + ownerUserIDs[i].domain + '><u><b>Uid: </b></u>' + ownerUserIDs[i].uid + ' <u><b>Domain: </b></u>' + ownerUserIDs[i].domain + '</label></div>';
         }
         html += '&nbsp;<input id="removeOwnerIDBtn" class="btn btn-danger" type="button" onClick=removeOwnerUserID() value="Remove" disabled></form>';
     }
