@@ -40,8 +40,6 @@ $(document).ready(function () {
 		valid = valid && checkLength(guid, "guid", 8, 45);
 		valid = valid && checkRegexp(fname, /^[a-zA-Z]*$/, "firstname can consist of a-z only");
 		valid = valid && checkRegexp(lname, /^[a-zA-Z]*$/, "lastname can consist of a-z only");
-		valid = valid && checkRegexp(guid, /^[a-z0-9]+$/i, "GUID can consist of only alphanumeric characters");
-
 
 		function checkLength(o, n, min, max) {
 			if (o.val().length > max || o.val().length < min) {
