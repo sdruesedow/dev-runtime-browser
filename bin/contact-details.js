@@ -223,16 +223,16 @@ function add_to_group(i) {
 
 	var html = "<p class='title'></p>" +
 		"<p>&nbsp;</p>"+
-		"<label>Group Name</label>"+
+		"<label style='font-size:18px'>Group Name</label>"+
 		"<input name='gname' type='text' id='gname' class='text ui-widget-content ui-corner-all'/><br>"+
 		"<p>&nbsp;</p>"+
-		" <input type='button' class='confirm yes' value='Yes' /><input type='button' class='confirm no' value='No' />";
+		" <input type='button' class='confirm yes' style='font-size:15px' value='Yes' /><input type='button' class='confirm no' style='font-size:15px' value='No' />";
 
 	$.fancybox({
 		type: "html",
 		content: html,
 		beforeShow: function () {
-			$(".title").html("Enter the Group Name !");
+			$(".title").html("<label style='font-size:20px'>Enter the Group Name !</label>");
 		},
 		afterShow: function () {
 			$(".confirm").on("click", function (event) {
