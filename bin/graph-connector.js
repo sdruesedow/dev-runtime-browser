@@ -381,7 +381,7 @@ function checkGUIDRuntime(guid) {
 				} else if (DirectContact.length !== 0) {
 					console.log('AddressBook Log: Found Direct Friend');
 					console.info(DirectContact);
-					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span>Found Mutual Contact: <b><u>\"" + DirectContact[0]._firstName + "\"</u> with GUID: <u>\"" + DirectContact[0]._guid + "\"</u></b></h3><br>";
+					contentHTML += "<br><h3><span class='glyphicon glyphicon-star' aria-hidden='true'></span> Already In Contacts As: <b><u>\"" + DirectContact[0]._firstName + "\"</u> with GUID: <u>\"" + DirectContact[0]._guid + "\"</u></b></h3><br>";
 				} else {
 					console.log('AddressBook Log: No direct or mutual Friend');
 					contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
