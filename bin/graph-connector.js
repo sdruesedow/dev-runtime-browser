@@ -385,7 +385,8 @@ function checkGUIDRuntime(guid) {
 				} else {
 					console.log('AddressBook Log: No direct or mutual Friend');
 					contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
-					contentHTML += "<div><button class='btn bn-info' id='add_contact_button' href='#add_contact' style='height:30px; color:white; width:170px'>Add as a contact</button><div><h6 align='left' style='color: gray;'>*If you want to add this GUID as a contact, please copy the GUID first.*</h6></div></div>";
+					contentHTML += "<div><button class='btn bn-info' id='add_contact_button' href='#add_contact' style='height:30px; color:white; width:170px'>Add as a contact</button></div>";
+					document.getElementById("guid").value=guid;
 				}
 				$.fancybox({
 					type: "html",
@@ -394,7 +395,8 @@ function checkGUIDRuntime(guid) {
 			} else {
 				console.log('User with no contacts \n GUID: ' + guid)
 				contentHTML += "<br><h3><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span><b> Not in Direct Contacts and no mutual friend found </b></h3><br> ";
-				contentHTML += "<div><button class='btn bn-info' id='add_contact_button' href='#add_contact' style='height:30px; color:white; width:170px'>Add as a contact</button><div><h6 align='left' style='color: gray;'>*If you want to add this GUID as a contact, please copy the GUID first.*</h6></div></div>";
+				contentHTML += "<div><button class='btn bn-info' id='add_contact_button' href='#add_contact' style='height:30px; color:white; width:170px'>Add as a contact</button></div>";
+				document.getElementById("guid").value=guid;
 				$.fancybox({
 					type: "html",
 					content: contentHTML
