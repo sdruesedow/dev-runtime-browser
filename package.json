@@ -28,8 +28,12 @@
   },
   "homepage": "https://rethink-project.eu/",
   "dependencies": {
+    "browserify": "13.3.0",
+    "gulp-sourcemaps": "1.11.0",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
     "runtime-core": "git+https://github.com/reTHINK-project/dev-runtime-core.git#develop",
     "service-framework": "git+https://github.com/reTHINK-project/dev-service-framework.git#develop",
+    "watchify": "3.8.0",
     "webrtcsupport": "2.2.0"
   },
   "devDependencies": {
